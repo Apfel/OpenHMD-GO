@@ -23,7 +23,7 @@
 package openhmd
 
 /*
-#cgo CFLAGS: -I../OpenHMD
+#cgo CFLAGS: -I../OpenHMD/include/
 #cgo LDFLAGS: -L. -lopenhmd
 #include <openhmd.h>
 */
