@@ -27,10 +27,10 @@ package openhmd
 import "C"
 
 // Context - An opaque pointer to a context structure.
-type Context C.ohmd_context
+type Context *C.ohmd_context
 
 // Device - An opaque pointer to a structure representing a device, such as an HMD.
-type Device C.ohmd_device
+type Device *C.ohmd_device
 
 // Create an OpenHMD context.
 func Create() Context {
@@ -43,7 +43,7 @@ func Destroy(context Context) {
 }
 
 // GetError - Get the last error as a human readable string.
-func GetError(context Context) string {
+func GetError(context Context) *C.char {
 	return C.ohmd_ctx_get_error(context)
 }
 
@@ -53,12 +53,12 @@ func Update(context Context) {
 }
 
 // Probe for devices.
-func Probe(context Context) int {
+func Probe(context Context) C.int {
 	return C.ohmd_ctx_probe(context)
 }
 
 // ListGetString - Get device description from enumeration list index.
-func ListGetString(device Device, index int, value int) string {
+func ListGetString(device Device, index int, value int) *C.char {
 	return C.ohmd_list_gets(device, index, value)
 }
 
@@ -68,21 +68,21 @@ func ListOpenDevice(context Context, index int) C.ohmd_device {
 }
 
 // CloseDevice - Closes the device associated with the context.
-func CloseDevice(context Context) int {
+func CloseDevice(context Context) C.int {
 	return C.ohmd_close_device(context)
 }
 
 // GetFloatDevice - Get a floating point value from a device.
-func GetFloatDevice(device Device, value float64) []float64 {
+func GetFloatDevice(device Device, value float64) *C.float {
 	return C.ohmd_device_getf(device, value)
 }
 
 // SetFloatDevice - Set a floating point value for a device.
-func SetFloatDevice(device Device, value int, values []float64) int {
+func SetFloatDevice(device Device, value int, values []float64) *C.int {
 	return C.ohmd_device_setf(device, value, values)
 }
 
 // GetIntDevice - Get an integer value from a device.
-func GetIntDevice(device Device, value int) []int {
+func GetIntDevice(device Device, value int) *[]C.int {
 	return C.ohmd_device_geti(device, value)
 }
