@@ -4,6 +4,7 @@
 ## Note: This requires you to have OpenHMD installed. [Click here for help.](http://www.openhmd.net/index.php/download/)
 
 ### Example Code
+##### This code needs to be updated, so it won't work for now.
 ```go
 package main
 
