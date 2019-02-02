@@ -67,9 +67,9 @@ func ListOpenDevice(context *Context, index C.int) C.ohmd_device {
 	return C.ohmd_list_open_device(context, index)
 }
 
-// CloseDevice - Closes the device associated with the context.
-func CloseDevice(context *Context) C.int {
-	return C.ohmd_close_device(context)
+// CloseDevice - Close a device.
+func CloseDevice(device *Device) C.int {
+	return C.ohmd_close_device(device)
 }
 
 // GetFloatDevice - Get a floating point value from a device.
