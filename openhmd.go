@@ -73,7 +73,7 @@ func CloseDevice(device *C.struct_ohmd_device) C.int {
 }
 
 // GetFloatDevice - Get a floating point value from a device.
-func GetFloatDevice(device *C.struct_ohmd_device, value *C.float, out *C.float) C.int {
+func GetFloatDevice(device *C.struct_ohmd_device, value *C.ohmd_float_value, out *C.float) C.int {
 	return C.ohmd_device_getf(device, value, out)
 }
 
