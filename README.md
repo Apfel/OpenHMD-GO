@@ -1,6 +1,7 @@
 # OpenHMD-GO
-OpenHMD API bindings for Golang.
+[OpenHMD](http://www.openhmd.net/) API bindings for [Golang](https://golang.org/).
 
+## Note: This requires you to have OpenHMD installed.
 
 ### Example Code
 ```go
