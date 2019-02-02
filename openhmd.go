@@ -23,11 +23,9 @@
 package openhmd
 
 /*
-#cgo CFLAGS: -I../OpenHMD/include/
 #cgo LDFLAGS: -L. -lopenhmd
-#include <openhmd.h>
+#include "./OpenHMD/include/openhmd.h"
 */
-
 import "C"
 
 // Context - An opaque pointer to a context structure.
