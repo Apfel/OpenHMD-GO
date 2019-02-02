@@ -22,10 +22,8 @@
 
 package openhmd
 
-/*
-#cgo LDFLAGS: -L. -lopenhmd
-#include "./OpenHMD/include/openhmd.h"
-*/
+//#cgo LDFLAGS: -L. -lopenhmd
+//#include "./OpenHMD/include/openhmd.h"
 import "C"
 
 // Context - An opaque pointer to a context structure.
@@ -35,56 +33,56 @@ type Context C.ohmd_context
 type Device C.ohmd_device
 
 // Create an OpenHMD context.
-func Create() *Context {
+func Create() Context {
 	return C.ohmd_ctx_create()
 }
 
 // Destroy an OpenHMD context.
-func Destroy(context *Context) {
+func Destroy(context Context) {
 	C.ohmd_ctx_destroy(context)
 }
 
 // GetError - Get the last error as a human readable string.
-func GetError(context *Context) string {
+func GetError(context Context) string {
 	return C.ohmd_ctx_get_error(context)
 }
 
 // Update a context.
-func Update(context *Context) {
+func Update(context Context) {
 	C.ohmd_ctx_update(context)
 }
 
 // Probe for devices.
-func Probe(context *Context) int {
+func Probe(context Context) int {
 	return C.ohmd_ctx_probe(context)
 }
 
 // ListGetString - Get device description from enumeration list index.
-func ListGetString(device *Device, index int, value int) string {
+func ListGetString(device Device, index int, value int) string {
 	return C.ohmd_list_gets(device, index, value)
 }
 
 // ListOpenDevice - Lists all opened Devices.
-func ListOpenDevice(context *Context, index int) *C.ohmd_device {
+func ListOpenDevice(context Context, index int) C.ohmd_device {
 	return C.ohmd_list_open_device(context, index)
 }
 
 // CloseDevice - Closes the device associated with the context.
-func CloseDevice(context *Context) int {
+func CloseDevice(context Context) int {
 	return C.ohmd_close_device(context)
 }
 
 // GetFloatDevice - Get a floating point value from a device.
-func GetFloatDevice(device *Device, value float64) []float64 {
+func GetFloatDevice(device Device, value float64) []float64 {
 	return C.ohmd_device_getf(device, value)
 }
 
 // SetFloatDevice - Set a floating point value for a device.
-func SetFloatDevice(device *Device, value int, values []float64) int {
+func SetFloatDevice(device Device, value int, values []float64) int {
 	return C.ohmd_device_setf(device, value, values)
 }
 
 // GetIntDevice - Get an integer value from a device.
-func GetIntDevice(device *Device, value int) []int {
+func GetIntDevice(device Device, value int) []int {
 	return C.ohmd_device_geti(device, value)
 }
