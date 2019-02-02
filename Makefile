@@ -23,16 +23,35 @@
 #----------------------------------------------------------------------
 # Go settings.
 #----------------------------------------------------------------------
-GO=go
-GOBUILD=$(GO) build
-GOCLEAN=$(GO) clean
-GOGET=$(GO) get
-GOTEST=$(GO) test
+GO		=	go
+GOBUILD	=	$(GO) build
+GOCLEAN	=	$(GO) clean
+GOGET	=	$(GO) get
+GOTEST	=	$(GO) test
+
+#----------------------------------------------------------------------
+# Building properties.
+#----------------------------------------------------------------------
+LIBOPENHMD=
 
 #----------------------------------------------------------------------
 # Standard option to run.
 #----------------------------------------------------------------------
 all: build
+
+#----------------------------------------------------------------------
+# General building procedure.
+#----------------------------------------------------------------------
+build:
+	@echo "Building OpenHMD-GO..."
+	@$(GOBUILD) -o $(LIBOPENHMD)-buildmode=shared openhmd.go
+
+#----------------------------------------------------------------------
+# Cleanup.
+#----------------------------------------------------------------------
+clean:
+	@echo "Cleaning directory..."
+	@$(GOCLEAN)
 
 #----------------------------------------------------------------------
 # This should help some users.
@@ -41,29 +60,5 @@ help:
 	@echo "OpenHMD-GO - Makefile - Version 1.0-rc1"
 	@echo " "
 	@echo "make build 			- Builds OpenHMD. This is the default option."
-	@echo "make help 			- Displays this message."
-	@echo "make test 			- Tests the compiled OpenHMD module after building."
 	@echo "make clean 			- Deletes all files created by building."
-	@echo "make deps 			- Installs all dependencies"
-	@echo "make depsremove 		- Removes all dependencies."
-
-#----------------------------------------------------------------------
-# General building procedure.
-#----------------------------------------------------------------------
-build:
-	@echo "Building OpenHMD-GO..."
-	@$(GOBUILD) -v
-
-#----------------------------------------------------------------------
-# Testing of the module.
-#----------------------------------------------------------------------
-test: build
-	@echo "Initiating test of OpenHMD-GO..."
-	@$(GOTEST)
-
-#----------------------------------------------------------------------
-# Cleanup.
-#----------------------------------------------------------------------
-clean:
-	@echo "Cleaning directory..."
-	@$(GOCLEAN)
+	@echo "make help 			- Displays this message."
