@@ -52,50 +52,50 @@ func Create() *Context {
 
 // Destroy an OpenHMD context.
 func Destroy(context *Context) {
-	C.ohmd_ctx_destroy(context)
+	C.ohmd_ctx_destroy(C.struct_ohmd_context(context))
 }
 
 // GetError - Get the last error as a human readable string.
 func GetError(context *Context) *C.char {
-	return C.ohmd_ctx_get_error(context)
+	return C.ohmd_ctx_get_error(C.struct_ohmd_context(context))
 }
 
 // Update a context.
 func Update(context *Context) {
-	C.ohmd_ctx_update(context)
+	C.ohmd_ctx_update(C.struct_ohmd_context(context))
 }
 
 // Probe for devices.
 func Probe(context *Context) C.int {
-	return C.ohmd_ctx_probe(context)
+	return C.ohmd_ctx_probe(C.struct_ohmd_context(context))
 }
 
 // ListGetString - Get device description from enumeration list index.
-func ListGetString(context *Context, index C.int, value C.ohmd_string_value) *C.char {
-	return C.ohmd_list_gets(context, index, value)
+func ListGetString(context *Context, index C.int, value StringValue) *C.char {
+	return C.ohmd_list_gets(C.struct_ohmd_context(context), index, C.ohmd_string_value(value))
 }
 
 // ListOpenDevice - Lists all opened Devices.
 func ListOpenDevice(context *Context, index C.int) *C.ohmd_device {
-	return C.ohmd_list_open_device(context, index)
+	return C.ohmd_list_open_device(C.struct_ohmd_context(context), index)
 }
 
 // CloseDevice - Close a device.
 func CloseDevice(device *Device) C.int {
-	return C.ohmd_close_device(device)
+	return C.ohmd_close_device(C.struct_ohmd_device(device))
 }
 
 // GetFloatDevice - Get a floating point value from a device.
 func GetFloatDevice(device *Device, value FloatValue, out *C.float) C.int {
-	return C.ohmd_device_getf(device, value, out)
+	return C.ohmd_device_getf(device, C.ohmd_float_value(value), out)
 }
 
 // SetFloatDevice - Set a floating point value for a device.
 func SetFloatDevice(device *Device, value FloatValue, values *C.float) C.int {
-	return C.ohmd_device_setf(device, value, values)
+	return C.ohmd_device_setf(C.struct_ohmd_device(device), C.ohmd_float_value(value), values)
 }
 
 // GetIntDevice - Get an integer value from a device.
 func GetIntDevice(device *Device, value IntValue, out *C.int) C.int {
-	return C.ohmd_device_geti(device, value, out)
+	return C.ohmd_device_geti(C.struct_ohmd_device(device), C.ohmd_int_value(value), out)
 }
