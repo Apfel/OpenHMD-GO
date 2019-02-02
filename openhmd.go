@@ -33,7 +33,7 @@ import "C"
 //type Device C.struct_ohmd_device
 
 // Create an OpenHMD context.
-func Create() C.struct_ohmd_context {
+func Create() *C.struct_ohmd_context {
 	return C.ohmd_ctx_create()
 }
 
@@ -58,7 +58,7 @@ func Probe(context *C.struct_ohmd_context) C.int {
 }
 
 // ListGetString - Get device description from enumeration list index.
-func ListGetString(context *C.struct_ohmd_context, index C.ohmd_string_value, value C.int) *C.char {
+func ListGetString(context *C.struct_ohmd_context, index C.int, value C.ohmd_string_value) *C.char {
 	return C.ohmd_list_gets(context, index, value)
 }
 
@@ -73,8 +73,8 @@ func CloseDevice(device *C.struct_ohmd_device) C.int {
 }
 
 // GetFloatDevice - Get a floating point value from a device.
-func GetFloatDevice(device *C.struct_ohmd_device, value *C.float) C.int {
-	return C.ohmd_device_getf(device, value)
+func GetFloatDevice(device *C.struct_ohmd_device, value *C.float, out *C.float) C.int {
+	return C.ohmd_device_getf(device, value, out)
 }
 
 // SetFloatDevice - Set a floating point value for a device.
@@ -83,6 +83,6 @@ func SetFloatDevice(device *C.struct_ohmd_device, value C.ohmd_float_value, valu
 }
 
 // GetIntDevice - Get an integer value from a device.
-func GetIntDevice(device *C.struct_ohmd_device, value C.ohmd_int_value) C.int {
-	return C.ohmd_device_geti(device, value)
+func GetIntDevice(device *C.struct_ohmd_device, value C.ohmd_int_value, out *C.int) C.int {
+	return C.ohmd_device_geti(device, value, out)
 }
