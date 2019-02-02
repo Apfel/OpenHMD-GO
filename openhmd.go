@@ -27,10 +27,10 @@ package openhmd
 import "C"
 
 // Context - An opaque pointer to a context structure.
-type Context C.ohmd_context
+type Context C.struct_ohmd_context
 
 // Device - An opaque pointer to a structure representing a device, such as an HMD.
-type Device C.ohmd_device
+type Device C.struct_ohmd_device
 
 // Create an OpenHMD context.
 func Create() Context {
