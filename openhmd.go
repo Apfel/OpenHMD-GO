@@ -26,6 +26,8 @@ package openhmd
 //#include "./OpenHMD/include/openhmd.h"
 import "C"
 
+/// Types
+
 // Context - An opaque pointer to a context structure.
 type Context C.struct_ohmd_context
 
