@@ -83,6 +83,6 @@ func SetFloatDevice(device *C.struct_ohmd_device, value C.ohmd_float_value, valu
 }
 
 // GetIntDevice - Get an integer value from a device.
-func GetIntDevice(device *C.struct_ohmd_device, value C.ohmd_int_value, out *C.int) C.int {
+func GetIntDevice(device *C.struct_ohmd_device, value *C.ohmd_int_value, out *C.int) C.int {
 	return C.ohmd_device_geti(device, value, out)
 }
