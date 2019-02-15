@@ -17,8 +17,6 @@
 //		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //		SOFTWARE.
-//
-//		Fun fact: I never had so much fun, copying descriptions for stuff to make lint happy was never so nice for me.
 
 package openhmd
 
@@ -34,68 +32,77 @@ type Context C.struct_ohmd_context
 // Device - An opaque pointer to a structure representing a device, such as an HMD.
 type Device C.struct_ohmd_device
 
-// StringValue - A collection of string value information types.
-type StringValue C.ohmd_string_value
+// IntValue - A collection of int value information types.
+type IntValue C.ohmd_int_value
 
 // FloatValue - A collection of float value information types.
 type FloatValue C.ohmd_float_value
 
-// IntValue - A collection of int value information types.
-type IntValue C.ohmd_int_value
+// StringValue - A collection of string value information types.
+type StringValue C.ohmd_string_value
 
-/// Functions
+// Float - A C-based Float.
+type Float C.float
+
+// Int - A C-based Integer.
+type Int C.int
+
+// String - A C-based char* in a string
+type String C.char
 
 // Create an OpenHMD context.
-func Create() *C.struct_ohmd_context {
+func Create() *Context {
 	return C.ohmd_ctx_create()
 }
 
+/// Functions
+
 // Destroy an OpenHMD context.
-func Destroy(context *C.struct_ohmd_context) {
-	C.ohmd_ctx_destroy(context)
+func Destroy(context *Context) {
+	C.ohmd_ctx_destroy(context.(C.struct_ohmd_context))
 }
 
 // GetError - Get the last error as a human readable string.
-func GetError(context *C.struct_ohmd_context) *C.char {
-	return C.ohmd_ctx_get_error(context)
+func GetError(context *Context) *String {
+	return C.ohmd_ctx_get_error(context.(C.struct_ohmd_context))
 }
 
 // Update a context.
-func Update(context *C.struct_ohmd_context) {
-	C.ohmd_ctx_update(context)
+func Update(context *Context) {
+	C.ohmd_ctx_update(context.(C.struct_ohmd_context))
 }
 
 // Probe for devices.
-func Probe(context *C.struct_ohmd_context) C.int {
-	return C.ohmd_ctx_probe(context)
+func Probe(context *Context) Int {
+	return C.ohmd_ctx_probe(context.(C.struct_ohmd_context))
 }
 
 // ListGetString - Get device description from enumeration list index.
-func ListGetString(context *C.struct_ohmd_context, index C.int, value C.ohmd_string_value) *C.char {
-	return C.ohmd_list_gets(context, index, value)
+func ListGetString(context *Context, index Int, value StringValue) *String {
+	return C.ohmd_list_gets(context.(C.struct_ohmd_context), index.(C.int), value.(C.ohmd_string_value))
 }
 
 // ListOpenDevice - Lists all opened Devices.
-func ListOpenDevice(context *C.struct_ohmd_context, index C.int) *C.ohmd_device {
-	return C.ohmd_list_open_device(context, index)
+func ListOpenDevice(context *Context, index Int) *Device {
+	return C.ohmd_list_open_device(context.(C.struct_ohmd_context), index.(C.int))
 }
 
 // CloseDevice - Close a device.
-func CloseDevice(device *C.struct_ohmd_device) C.int {
-	return C.ohmd_close_device(device)
+func CloseDevice(device *Device) Int {
+	return C.ohmd_close_device(device.(C.struct_ohmd_device))
 }
 
 // GetFloatDevice - Get a floating point value from a device.
-func GetFloatDevice(device *C.struct_ohmd_device, value C.ohmd_float_value, out *C.float) C.int {
-	return C.ohmd_device_getf(device, value, out)
+func GetFloatDevice(device *Device, value FloatValue, out *Float) Int {
+	return C.ohmd_device_getf(device.(C.struct_ohmd_device), value.(C.ohmd_float_value), out.(C.float))
 }
 
 // SetFloatDevice - Set a floating point value for a device.
-func SetFloatDevice(device *C.struct_ohmd_device, value C.ohmd_float_value, values *C.float) C.int {
-	return C.ohmd_device_setf(device, value, values)
+func SetFloatDevice(device *Device, value FloatValue, values *Float) Int {
+	return C.ohmd_device_setf(device.(C.struct_ohmd_device), value.(C.ohmd_float_value), values.(C.float))
 }
 
 // GetIntDevice - Get an integer value from a device.
-func GetIntDevice(device *C.struct_ohmd_device, value C.ohmd_int_value, out *C.int) C.int {
-	return C.ohmd_device_geti(device, value, out)
+func GetIntDevice(device *Device, value IntValue, out *Int) Int {
+	return C.ohmd_device_geti(device.(C.struct_ohmd_device), value.(C.ohmd_int_value), out.(C.int))
 }
