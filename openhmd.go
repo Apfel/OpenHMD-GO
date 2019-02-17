@@ -21,7 +21,7 @@
 package openhmd
 
 //#cgo LDFLAGS: -L. -lopenhmd
-//#include "./OpenHMD/include/openhmd.h"
+//#include "OpenHMD/include/openhmd.h"
 import "C"
 
 /// Types
