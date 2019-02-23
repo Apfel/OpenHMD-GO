@@ -44,7 +44,7 @@ const (
 
 // All known StringValues.
 const (
-	StringValueVendor C.ohmd_string_value = iota
+	StringValueVendor StringValue = iota
 	StringValueProduct
 	StringValuePath
 )
