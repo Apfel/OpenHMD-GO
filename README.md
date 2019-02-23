@@ -43,10 +43,10 @@ func main() {
 		var value int
 
 		// Replace with whatever you want
-		if rot := dev.GetFloat(OpenHMD.FloatValueRotationQuat, value); rot == 0 {
+		if status, value := dev.GetFloat(OpenHMD.FloatValueRotationQuat); status == 0 {
 			fmt.Printf("Value: %d\n", value)
 		} else {
-			fmt.Printf("Error code: %d", rot)
+			fmt.Printf("Error code: %d", status)
 		}
 
 		time.Sleep(1 * time.Second)
