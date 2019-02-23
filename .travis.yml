@@ -2,7 +2,20 @@ language: go
 go: 
  - stable
 before_install:
-  - sudo add-apt-repository ppa:theonlyjoey/openhmd -y
-  - sudo apt-get update
-  - sudo apt-get install libopenhmd0 libopenhmd-dev -y
+  # required packages
+  - sudo apt-get install libudev-dev libusb-dev -y
+  # hidapi
+  - git clone https://github.com/OpenHMD/hidapi.git
+  - cd hidapi
+  - ./bootstrap
+  - ./configure
+  - make
+  - sudo make install
+  - cd ../
+  # OpenHMD
+  cd OpenHMD
+  - meson ./build
+  - ninja -C ./build/
+  - sudo ninja -C ./build/ install
+# Actual build
 script: go build
