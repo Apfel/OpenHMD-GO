@@ -1,0 +1,7 @@
+language: go
+go: 
+ - stable
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install libopenhmd0 libopenhmd-dev
+script: go build
