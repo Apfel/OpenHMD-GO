@@ -28,6 +28,9 @@ package openhmd
 //#include "OpenHMD/include/openhmd.h"
 import "C"
 
+// StringSize defines the maximum length of a string, including termination, in OpenHMD.
+const StringSize = C.OHMD_STR_SIZE
+
 // All known OpenHMD StatusCodes.
 const (
 	StatusCodeOkay             StatusCode = 0
