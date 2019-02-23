@@ -11,11 +11,12 @@ before_install:
   - ./configure
   - make
   - sudo make install
-  - cd ../
+  - cd ..
   # OpenHMD
   - cd OpenHMD
   - cmake . 
   - make
   - sudo make install
+  - cd ..
 # Actual build
 script: go build
