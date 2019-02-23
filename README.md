@@ -1,6 +1,5 @@
 [![GoDoc](https://godoc.org/github.com/Apfel/OpenHMD?status.svg)](https://godoc.org/github.com/Apfel/OpenHMD)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Apfel/OpenHMD-GO)](https://goreportcard.com/report/github.com/Apfel/OpenHMD-GO)
-[![Build Status](https://travis-ci.org/Apfel/OpenHMD-GO.svg?branch=master)](https://travis-ci.org/Apfel/OpenHMD-GO)
 
 # OpenHMD-GO
 [OpenHMD](http://www.openhmd.net/) API bindings for [Golang](https://golang.org/).
