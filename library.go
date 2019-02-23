@@ -28,12 +28,19 @@ package openhmd
 //#include "OpenHMD/include/openhmd.h"
 import "C"
 
-// Create an OpenHMD context.
+// Create makes an OpenHMD context.
+// Returns nil if the context can't allocate memory.
 func Create() *Context {
-	return &Context{c: C.ohmd_ctx_create()}
+	ctx := C.ohmd_ctx_create()
+	if ctx == nil {
+		return nil
+	}
+
+	return &Context{c: ctx}
 }
 
-// Destroy an OpenHMD context.
+// Destroy removes the current OpenHMD context.
+// Note: Your context will be nulled and all devices associated with the context are automatically closed.
 func (c *Context) Destroy() {
 	C.ohmd_ctx_destroy(c.c)
 }
@@ -43,12 +50,14 @@ func (c *Context) GetError() string {
 	return C.GoString(C.ohmd_ctx_get_error(c.c))
 }
 
-// Update a context.
+// Update updates the current context
+// to fetch the values for the devices handled by a context.
 func (c *Context) Update() {
 	C.ohmd_ctx_update(c.c)
 }
 
 // Probe for devices.
+// Returns the number of devices found on the system.
 func (c *Context) Probe() int {
 	return int(C.ohmd_ctx_probe(c.c))
 }
@@ -64,19 +73,19 @@ func (c *Context) ListOpenDevice(index int) *Device {
 }
 
 // GetFloat gets a floating point value from a device.
-func (d *Device) GetFloat(value FloatValue, out int) int {
+func (d *Device) GetFloat(value FloatValue, out int) StatusCode {
 	val := C.float(out)
-	return int(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
+	return StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
 }
 
 // SetFloat sets a floating point value for a device.
-func (d *Device) SetFloat(value FloatValue, input int) int {
+func (d *Device) SetFloat(value FloatValue, input int) StatusCode {
 	val := C.float(input)
-	return int(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), &val))
+	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), &val))
 }
 
 // GetInt gets an integer value from a device.
-func (d *Device) GetInt(value IntValue, out int) int {
+func (d *Device) GetInt(value IntValue, out int) StatusCode {
 	val := C.int(out)
-	return int(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
+	return StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
 }
