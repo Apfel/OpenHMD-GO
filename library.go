@@ -28,48 +28,48 @@ package openhmd
 //#include "OpenHMD/include/openhmd.h"
 import "C"
 
-// CreateContext creates a context.
-func CreateContext() *Context {
+// Create an OpenHMD context.
+func Create() *Context {
 	return &Context{
 		c: C.ohmd_ctx_create(),
 	}
 }
 
-// Destroy destroys the context.
+// Destroy an OpenHMD context.
 func (c *Context) Destroy() {
 	C.ohmd_ctx_destroy(c.c)
 }
 
-// Probe -
+// Probe for devices.
 func (c *Context) Probe() int {
 	return int(C.ohmd_ctx_probe(c.c))
 }
 
-// ListOpenDevice -
+// ListOpenDevice opens a device.
 func (c *Context) ListOpenDevice(index int) *Device {
 	return &Device{
 		c: C.ohmd_list_open_device(c.c, C.int(index)),
 	}
 }
 
-// ListGetS -
+// ListGetS gets device description from enumeration list index.
 func (c *Context) ListGetS(deviceIndex int, value StringValue) string {
 	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
 }
 
-// ListGetI -
+// Update a context.
+func (c *Context) Update() {
+	C.ohmd_ctx_update(c.c)
+}
+
+// ListGetI gets an integer value from a device.
 func (d *Device) ListGetI(value IntValue, out int) int {
 	val := C.int(out)
 	return int(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
 }
 
-// ListGetF -
+// ListGetF gets a floating point value from a device.
 func (d *Device) ListGetF(value FloatValue, out int) int {
 	val := C.float(out)
 	return int(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
-}
-
-// Update -
-func (c *Context) Update() {
-	C.ohmd_ctx_update(c.c)
 }
