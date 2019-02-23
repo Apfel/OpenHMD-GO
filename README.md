@@ -32,6 +32,6 @@ func main() {
 
 	var value int
 	rot := dev.GetFloat(1, value)
-	fmt.Printf("Float: %d | Value: %d", rot, value)
+	fmt.Printf("Float: %d | Value: %d\n", rot, value)
 }
 ```
