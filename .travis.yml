@@ -2,6 +2,7 @@ language: go
 go: 
  - stable
 before_install:
+  - sudo add-apt-repository ppa:theonlyjoey/openhmd -y
   - sudo apt-get update
-  - sudo apt-get install libopenhmd0 libopenhmd-dev
+  - sudo apt-get install libopenhmd0 libopenhmd-dev -y
 script: go build
