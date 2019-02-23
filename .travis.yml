@@ -13,7 +13,7 @@ before_install:
   - sudo make install
   - cd ../
   # OpenHMD
-  cd OpenHMD
+  - cd OpenHMD
   - meson ./build
   - ninja -C ./build/
   - sudo ninja -C ./build/ install
