@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/Apfel/OpenHMD?status.svg)](https://godoc.org/github.com/Apfel/OpenHMD)
+[![GoDoc](https://godoc.org/github.com/Apfel/OpenHMD-GO?status.svg)](https://godoc.org/github.com/Apfel/OpenHMD-GO)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Apfel/OpenHMD-GO)](https://goreportcard.com/report/github.com/Apfel/OpenHMD-GO)
 
 # OpenHMD-GO
