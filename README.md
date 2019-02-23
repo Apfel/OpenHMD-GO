@@ -20,19 +20,18 @@ import (
 
 func main() {
 	ctx := OpenHMD.Create()
-	fmt.Println("Context: " + ctx)
+	fmt.Printf("Context: %v\n", ctx)
 
-	numDevices := OpenHMD.Probe(ctx)
-	fmt.Println("numDevices (Probe): " + numDevices)
+	numDevices := ctx.Probe()
+	fmt.Printf("numDevices (Probe): %d\n", numDevices)
 
-	dev := OpenHMD.ListOpenDevice(ctx, 0)
-	fmt.Println("Device: " + dev)
+	dev := ctx.ListOpenDevice(0)
+	fmt.Printf("Device: %v\n", dev)
 
-	OpenHMD.Update(ctx)
+	ctx.Update()
 
-	rot := OpenHMD.GetFloatDevice(dev, 1)
-	for _, v := range rot {
-		fmt.Println(f + ", ")
-	}
+	var value int
+	rot := dev.GetFloat(1, value)
+	fmt.Printf("Float: %d | Value: %d", rot, value)
 }
 ```
