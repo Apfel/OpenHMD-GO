@@ -3,7 +3,7 @@ go:
  - stable
 before_install:
   # required packages
-  - sudo apt-get install libudev-dev libusb-dev libusb-1.0 meson ninja-build -y
+  - sudo apt-get install libudev-dev libusb-dev libusb-1.0-0 cmake make -y
   # hidapi
   - git clone https://github.com/OpenHMD/hidapi.git
   - cd hidapi
@@ -14,8 +14,8 @@ before_install:
   - cd ../
   # OpenHMD
   - cd OpenHMD
-  - meson ./build
-  - ninja -C ./build/
-  - sudo ninja -C ./build/ install
+  - cmake . 
+  - make
+  - sudo make install
 # Actual build
 script: go build
