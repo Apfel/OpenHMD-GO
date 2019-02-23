@@ -14,6 +14,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	OpenHMD "github.com/Apfel/OpenHMD-GO"
 )
@@ -23,15 +24,29 @@ func main() {
 	fmt.Printf("Context: %v\n", ctx)
 
 	numDevices := ctx.Probe()
-	fmt.Printf("numDevices (Probe): %d\n", numDevices)
+	fmt.Printf("Device count: %d\n", numDevices)
 
-	dev := ctx.ListOpenDevice(0)
-	fmt.Printf("Device: %v\n", dev)
+	// Enter the ID for your device here
+	id := 0
 
-	ctx.Update()
+	dev := ctx.ListOpenDevice(id)
+	fmt.Printf("Device Product: %s - Vendor: %s\n", ctx.ListGetString(id, OpenHMD.StringValueProduct), ctx.ListGetString(id, OpenHMD.StringValueVendor))
 
-	var value int
-	rot := dev.GetFloat(1, value)
-	fmt.Printf("Float: %d | Value: %d\n", rot, value)
+	// Simple while loop
+	for 1 == 1 {
+		// Make sure you update your Context as well
+		ctx.Update()
+
+		var value int
+
+		// Replace with whatever you want
+		if rot := dev.GetFloat(OpenHMD.FloatValueRotationQuat, value); rot == 0 {
+			fmt.Printf("Value: %d\n", value)
+		} else {
+			fmt.Printf("Error code: %d", rot)
+		}
+
+		time.Sleep(1 * time.Second)
+	}
 }
 ```
