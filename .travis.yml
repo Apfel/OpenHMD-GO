@@ -3,7 +3,7 @@ go:
  - stable
 before_install:
   # required packages
-  - sudo apt-get install libudev-dev libusb-dev libusb-1.0-0 cmake make -y
+  - sudo apt-get install libudev-dev libusb-dev libusb-1.0 cmake make -y
   # hidapi
   - git clone https://github.com/OpenHMD/hidapi.git
   - cd hidapi
