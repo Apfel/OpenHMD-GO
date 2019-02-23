@@ -27,11 +27,16 @@ package openhmd
 //#cgo LDFLAGS: -L. -lopenhmd
 //#include "OpenHMD/include/openhmd.h"
 import "C"
+import (
+	"strings"
+	"unsafe"
+)
 
 // Create makes an OpenHMD context.
 // Returns nil if the context can't allocate memory.
 func Create() *Context {
 	ctx := C.ohmd_ctx_create()
+
 	if ctx == nil {
 		return nil
 	}
@@ -62,9 +67,30 @@ func (c *Context) Probe() int {
 	return int(C.ohmd_ctx_probe(c.c))
 }
 
+// GetString fetches a string from OpenHMD.
+func GetString(desc StringDescription) (StatusCode, string) {
+	var value **C.char
+	code := StatusCode(C.ohmd_gets(C.ohmd_string_description(desc), value))
+
+	// I can't len() over a **C.Char, sadly
+	str := make([]string, StringSize)
+	for i, s := range (*[1 << 30]*C.char)(unsafe.Pointer(value))[:StringSize:StringSize] {
+		str[i] = C.GoString(s)
+	}
+
+	return code, strings.Join(str, " ")
+}
+
 // ListGetString gets device description from enumeration list index.
 func (c *Context) ListGetString(deviceIndex int, value StringValue) string {
 	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
+}
+
+// ListGetInt gets integer value from enumeration list index.
+func (c *Context) ListGetInt(deviceIndex int, value IntValue) (StatusCode, int) {
+	var val C.int
+	code := StatusCode(C.ohmd_list_geti(c.c, C.int(deviceIndex), C.ohmd_int_value(value), &val))
+	return code, int(val)
 }
 
 // ListOpenDevice opens a device.
@@ -72,20 +98,73 @@ func (c *Context) ListOpenDevice(index int) *Device {
 	return &Device{c: C.ohmd_list_open_device(c.c, C.int(index))}
 }
 
+// ListOpenDeviceSettings opens a device with additional settings provided.
+func (c *Context) ListOpenDeviceSettings(index int, settings DeviceSettings) *Device {
+	return &Device{c: C.ohmd_list_open_device_s(c.c, C.int(index), settings.c)}
+}
+
+// CreateSettings creates a device settings instance.
+func (c *Context) CreateSettings() *DeviceSettings {
+	settings := C.ohmd_device_settings_create(c.c)
+
+	if settings == nil {
+		return nil
+	}
+
+	return &DeviceSettings{c: settings}
+}
+
+// Destroy destroys a device settings instance.
+func (s *DeviceSettings) Destroy() {
+	C.ohmd_device_settings_destroy(s.c)
+}
+
+// Close closes the current device.
+func (d *Device) Close() StatusCode {
+	return StatusCode(C.ohmd_close_device(d.c))
+}
+
 // GetFloat gets a floating point value from a device.
-func (d *Device) GetFloat(value FloatValue, out int) StatusCode {
-	val := C.float(out)
-	return StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
+func (d *Device) GetFloat(value FloatValue) (StatusCode, float32) {
+	var val C.float
+	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
+	return code, float32(val)
 }
 
 // SetFloat sets a floating point value for a device.
-func (d *Device) SetFloat(value FloatValue, input int) StatusCode {
-	val := C.float(input)
+func (d *Device) SetFloat(value FloatValue, input float32) StatusCode {
+	val := C.float(input) // a bit ugly, but whatever
 	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), &val))
 }
 
 // GetInt gets an integer value from a device.
-func (d *Device) GetInt(value IntValue, out int) StatusCode {
-	val := C.int(out)
-	return StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
+func (d *Device) GetInt(value IntValue) (StatusCode, int) {
+	var val C.int
+	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
+	return code, int(val)
+}
+
+// SetInt sets an integer value for a device.
+func (d *Device) SetInt(value IntValue, input int) StatusCode {
+	val := C.int(input)
+	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), &val))
+}
+
+// SetData sets direct data for a device.
+func (d *Device) SetData(value DataValue, input interface{}) StatusCode {
+	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))
+}
+
+// GetVersion fetches OpenHMD's version.
+func GetVersion() (int, int, int) {
+	var major, minor, patch C.int
+	C.ohmd_get_version(&major, &minor, &patch)
+
+	return int(major), int(minor), int(patch)
+}
+
+// RequireVersion checks that the library is compatible with the required version.
+// Returns StatusOkay if compatible, else StatusUnsupported.
+func RequireVersion(major, minor, patch int) StatusCode {
+	return StatusCode(C.ohmd_require_version(C.int(major), C.int(minor), C.int(patch)))
 }
