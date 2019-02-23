@@ -29,42 +29,42 @@ package openhmd
 import "C"
 
 // StatusCode - Response status codes.
-type StatusCode int
+type StatusCode C.ohmd_status
 
 // StringValue - String values to fetch information.
-type StringValue int
+type StringValue C.ohmd_string_value
 
 // StringDescription - String descriptions for StringValues.
-type StringDescription int
+type StringDescription C.ohmd_string_description
 
 // ControlHint - Control hints.
-type ControlHint int
+type ControlHint C.ohmd_control_hint
 
 // ControlType - Control types.
-type ControlType int
+type ControlType C.ohmd_control_type
 
 // FloatValue - Floating point values.
-type FloatValue int
+type FloatValue C.ohmd_float_value
 
 // IntValue - Integer values.
-type IntValue int
+type IntValue C.ohmd_int_value
 
 // DataValue - Data values.
-type DataValue int
+type DataValue C.ohmd_data_value
 
 // IntSettings - Integer-based settings.
-type IntSettings int
+type IntSettings C.ohmd_int_settings
 
 // DeviceClass - Device classes for OpenHMD devices.
-type DeviceClass int
+type DeviceClass C.ohmd_device_class
 
 // DeviceFlags - Device flags for OpenHMD devices.
-type DeviceFlags int
+type DeviceFlags C.ohmd_device_flags
 
 // Context holds contextial data.
 type Context struct {
 	c *C.struct_ohmd_context
-}
+}int
 
 // Device defines a OpenHMD device, like a HMD.
 type Device struct {

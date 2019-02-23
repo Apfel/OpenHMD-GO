@@ -24,27 +24,31 @@
 
 package openhmd
 
+//#cgo LDFLAGS: -L. -lopenhmd
+//#include "OpenHMD/include/openhmd.h"
+import "C"
+
 // All known OpenHMD StatusCodes.
 const (
-	StatusCodeOkay             = 0
-	StatusCodeUnknownError     = -1
-	StatusCodeInvalidParameter = -2
-	StatusCodeUnsupported      = -3
-	StatusCodeInvalidOperation = -4
+	StatusCodeOkay             StatusCode = 0
+	StatusCodeUnknownError     StatusCode = -1
+	StatusCodeInvalidParameter StatusCode = -2
+	StatusCodeUnsupported      StatusCode = -3
+	StatusCodeInvalidOperation StatusCode = -4
 
-	StatusCodeUserReserved = -16384
+	StatusCodeUserReserved StatusCode = -16384
 )
 
 // All known StringValues.
 const (
-	StringValueVendor = iota
+	StringValueVendor C.ohmd_string_value = iota
 	StringValueProduct
 	StringValuePath
 )
 
 // All known StringDescriptions.
 const (
-	StringDescriptionGlslDisortionVertSrc = iota
+	StringDescriptionGlslDisortionVertSrc StringDescription = iota
 	StringDescriptionGlslDisortionFragSRC
 	StringDescriptionGsls330DisortionVertSrc
 	StringDescriptionGsls330DisortionFragSrc
@@ -54,7 +58,7 @@ const (
 
 // All known ControlHints.
 const (
-	ControlHintGeneric = iota
+	ControlHintGeneric ControlHint = iota
 	ControlHintTrigger
 	ControlHintTriggerClick
 	ControlHintSqueeze
@@ -74,13 +78,13 @@ const (
 
 // All known ControlTypes.
 const (
-	ControlTypeDigital = iota
+	ControlTypeDigital ControlType = iota
 	ControlTypeAnalog
 )
 
 // All known FloatValues.
 const (
-	FloatValueRotationQuat = iota + 1
+	FloatValueRotationQuat FloatValue = iota + 1
 	FloatValueLeftEyeGlModelViewMatrix
 	FloatValueRightEyeGlModelViewMatrix
 	FloatValueLeftEyeGlProjectionMatrix
@@ -106,7 +110,7 @@ const (
 
 // All known IntValues.
 const (
-	IntValueScreenHorizontalResolution = iota
+	IntValueScreenHorizontalResolution IntValue = iota
 	IntValueScreenVerticalResolution
 	IntValueDeviceClass
 	IntValueDeviceFlags
@@ -117,27 +121,25 @@ const (
 
 // All known DeviceClasses.
 const (
-	DeviceClassHMD = iota
+	DeviceClassHMD DeviceClass = iota
 	DeviceClassController
 	DeviceClassGenericTracker
 )
 
 // All known IntSettings.
-const (
-	IntSettingsIdsAutomaticUpdate = iota
-)
+const IntSettingsIdsAutomaticUpdate IntSettings = iota
 
 // All known DataValues.
 const (
-	DataValueDriverData = iota
+	DataValueDriverData DataValue = iota
 	DataValueDriverProperties
 )
 
 // All known DeviceFlags.
 const (
-	DeviceFlagsNullDevice         = 1
-	DeviceFlagsPositionalTracking = 2
-	DeviceFlagsRotationalTracking = 4
-	DeviceFlagsLeftController     = 8
-	DeviceFlagsRightController    = 16
+	DeviceFlagsNullDevice         DeviceFlags = 1
+	DeviceFlagsPositionalTracking DeviceFlags = 2
+	DeviceFlagsRotationalTracking DeviceFlags = 4
+	DeviceFlagsLeftController     DeviceFlags = 8
+	DeviceFlagsRightController    DeviceFlags = 16
 )
