@@ -64,6 +64,12 @@ func (d *Device) ListGetI(value IntValue, out int) int {
 }
 
 // ListGetF -
-func (d *Device) ListGetF(value FloatValue) {
+func (d *Device) ListGetF(value FloatValue, out int) int {
+	val := C.float(out)
+	return int(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
+}
 
+// Update -
+func (c *Context) Update() {
+	C.ohmd_ctx_update(c.c)
 }
