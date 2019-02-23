@@ -30,9 +30,7 @@ import "C"
 
 // Create an OpenHMD context.
 func Create() *Context {
-	return &Context{
-		c: C.ohmd_ctx_create(),
-	}
+	return &Context{c: C.ohmd_ctx_create()}
 }
 
 // Destroy an OpenHMD context.
@@ -40,21 +38,9 @@ func (c *Context) Destroy() {
 	C.ohmd_ctx_destroy(c.c)
 }
 
-// Probe for devices.
-func (c *Context) Probe() int {
-	return int(C.ohmd_ctx_probe(c.c))
-}
-
-// ListOpenDevice opens a device.
-func (c *Context) ListOpenDevice(index int) *Device {
-	return &Device{
-		c: C.ohmd_list_open_device(c.c, C.int(index)),
-	}
-}
-
-// ListGetS gets device description from enumeration list index.
-func (c *Context) ListGetS(deviceIndex int, value StringValue) string {
-	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
+// GetError gets the last error as a human readable string.
+func (c *Context) GetError() string {
+	return C.GoString(C.ohmd_ctx_get_error(c.c))
 }
 
 // Update a context.
@@ -62,14 +48,35 @@ func (c *Context) Update() {
 	C.ohmd_ctx_update(c.c)
 }
 
-// ListGetI gets an integer value from a device.
-func (d *Device) ListGetI(value IntValue, out int) int {
-	val := C.int(out)
-	return int(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
+// Probe for devices.
+func (c *Context) Probe() int {
+	return int(C.ohmd_ctx_probe(c.c))
 }
 
-// ListGetF gets a floating point value from a device.
-func (d *Device) ListGetF(value FloatValue, out int) int {
+// ListGetString gets device description from enumeration list index.
+func (c *Context) ListGetString(deviceIndex int, value StringValue) string {
+	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
+}
+
+// ListOpenDevice opens a device.
+func (c *Context) ListOpenDevice(index int) *Device {
+	return &Device{c: C.ohmd_list_open_device(c.c, C.int(index))}
+}
+
+// GetFloat gets a floating point value from a device.
+func (d *Device) GetFloat(value FloatValue, out int) int {
 	val := C.float(out)
 	return int(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
+}
+
+// SetFloat sets a floating point value for a device.
+func (d *Device) SetFloat(value FloatValue, input int) int {
+	val := C.float(input)
+	return int(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), &val))
+}
+
+// GetInt gets an integer value from a device.
+func (d *Device) GetInt(value IntValue, out int) int {
+	val := C.int(out)
+	return int(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
 }
