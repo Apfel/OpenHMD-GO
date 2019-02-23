@@ -39,3 +39,31 @@ func CreateContext() *Context {
 func (c *Context) Destroy() {
 	C.ohmd_ctx_destroy(c.c)
 }
+
+// Probe -
+func (c *Context) Probe() int {
+	return int(C.ohmd_ctx_probe(c.c))
+}
+
+// ListOpenDevice -
+func (c *Context) ListOpenDevice(index int) *Device {
+	return &Device{
+		c: C.ohmd_list_open_device(c.c, C.int(index)),
+	}
+}
+
+// ListGetS -
+func (c *Context) ListGetS(deviceIndex int, value StringValue) string {
+	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
+}
+
+// ListGetI -
+func (d *Device) ListGetI(value IntValue, out int) int {
+	val := C.int(out)
+	return int(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
+}
+
+// ListGetF -
+func (d *Device) ListGetF(value FloatValue) {
+
+}

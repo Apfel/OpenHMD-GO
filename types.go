@@ -64,7 +64,7 @@ type DeviceFlags C.ohmd_device_flags
 // Context holds contextial data.
 type Context struct {
 	c *C.struct_ohmd_context
-}int
+}
 
 // Device defines a OpenHMD device, like a HMD.
 type Device struct {

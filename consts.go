@@ -127,7 +127,9 @@ const (
 )
 
 // All known IntSettings.
-const IntSettingsIdsAutomaticUpdate IntSettings = iota
+const (
+	IntSettingsIdsAutomaticUpdate IntSettings = iota
+)
 
 // All known DataValues.
 const (
