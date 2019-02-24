@@ -125,34 +125,61 @@ func (d *Device) Close() StatusCode {
 }
 
 // GetFloat gets a floating point value from a device.
-func (d *Device) GetFloat(value FloatValue) (StatusCode, float32) {
-	var val C.float
-	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), &val))
-	return code, float32(val)
+func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
+	var val *C.float
+	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), val))
+
+	f := make([]float32, length)
+	for i, v := range (*[1 << 30]C.float)(unsafe.Pointer(val))[:length:length] {
+		f[i] = float32(v)
+	}
+
+	return code, f
 }
 
 // SetFloat sets a floating point value for a device.
-func (d *Device) SetFloat(value FloatValue, input float32) StatusCode {
-	val := C.float(input) // a bit ugly, but whatever
-	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), &val))
+func (d *Device) SetFloat(value FloatValue, input []float32, length int) StatusCode {
+	var val *C.float
+
+	for i, v := range (*[1 << 30]*C.float)(unsafe.Pointer(val))[:length:length] {
+		f := C.float(input[i])
+		v = &f
+		_ = v // thank you Google
+	}
+
+	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), val))
 }
 
 // GetInt gets an integer value from a device.
-func (d *Device) GetInt(value IntValue) (StatusCode, int) {
-	var val C.int
-	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), &val))
-	return code, int(val)
+func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int) {
+	var val *C.int
+	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), val))
+
+	// l a z i n e s s
+	f := make([]int, length)
+	for i, v := range (*[1 << 30]C.float)(unsafe.Pointer(val))[:length:length] {
+		f[i] = int(v)
+	}
+
+	return code, f
 }
 
 // SetInt sets an integer value for a device.
-func (d *Device) SetInt(value IntValue, input int) StatusCode {
-	val := C.int(input)
-	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), &val))
+func (d *Device) SetInt(value IntValue, input []int, length int) StatusCode {
+	var val *C.int
+
+	for i, v := range (*[1 << 30]*C.int)(unsafe.Pointer(val))[:length:length] {
+		f := C.int(input[i])
+		v = &f
+		_ = v // thank you Google
+	}
+
+	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), val))
 }
 
 // SetData sets direct data for a device.
-func (d *Device) SetData(value DataValue, input interface{}) StatusCode {
-	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))
+func (d *Device) SetData(value DataValue, input *interface{}) StatusCode {
+	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(input)))
 }
 
 // GetVersion fetches OpenHMD's version.
