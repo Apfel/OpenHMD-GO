@@ -38,11 +38,11 @@ int setintmulti(ohmd_device* dev, ohmd_int_value type, int in[]) {
     return ohmd_device_seti(dev, type, &in);
 }
 
-
+/* This is just too broken
 int getstring(ohmd_string_description description, char* out) {
     const char** outt = "";
     int code = ohmd_gets(description, out);
 
-    if (strncpy(outt, out) != 0) return OHMD_S_UNKNOWN_ERROR;
+    if (strncpy(outt, &out) != 0) return OHMD_S_UNKNOWN_ERROR;
     return code;
-}
+}*/
