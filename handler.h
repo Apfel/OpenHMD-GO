@@ -15,6 +15,6 @@ int getintmulti(ohmd_device* dev, ohmd_int_value type, int* out);
 int setintsingle(ohmd_device* dev, ohmd_int_value type, int in);
 int setintmulti(ohmd_device* dev, ohmd_int_value type, int* in);
 
-int getstring(ohmd_string_description description, const char* ount);
+int getstring(ohmd_string_description description, char* out);
 
 #endif
