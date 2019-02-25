@@ -15,40 +15,48 @@ go get github.com/Apfel/OpenHMD-GO
 package main
 
 import (
-	"fmt"
+	"log"
 	"time"
 
-	OpenHMD "github.com/Apfel/OpenHMD-GO"
+	openhmd "github.com/Apfel/OpenHMD-GO"
 )
 
 func main() {
-	ctx := OpenHMD.Create()
-	fmt.Printf("Context: %v\n", ctx)
+	context := openhmd.Create()
+	if context == nil {
+		log.Fatalln("Context couldn't be opened.")
+	}
 
-	numDevices := ctx.Probe()
-	fmt.Printf("Device count: %d\n", numDevices)
+	if count := context.Probe(); count == 0 {
+		log.Fatalln("No devices.")
+	} else {
+		log.Printf("Device count: %d", count)
+	}
 
-	// Enter the ID for your device here
+	// define your device's ID here
 	id := 0
 
-	dev := ctx.ListOpenDevice(id)
-	fmt.Printf("Device Product: %s - Vendor: %s\n", ctx.ListGetString(id, OpenHMD.StringValueProduct), ctx.ListGetString(id, OpenHMD.StringValueVendor))
+	device := context.ListOpenDevice(id)
+	if device == nil || len(context.GetError()) != 0 {
+		log.Fatalf("Device couldn't be opened. Error: %s", context.GetError())
+	} else {
+		log.Printf("Opened device %s, vendor is %s. ID: %s", context.ListGetString(id, openhmd.StringValueProduct),
+			context.ListGetString(id, openhmd.StringValueVendor), context.ListGetString(id, openhmd.StringValuePath))
+	}
 
-	// Simple while loop
+	c, r := device.GetFloat(openhmd.FloatValueRotationQuat, 4)
+	if c != openhmd.StatusCodeOkay {
+		log.Fatalf("Rotation - Error code %d", c)
+	}
+
+	c, p := device.GetFloat(openhmd.FloatValuePositionVector, 3)
+	if c != openhmd.StatusCodeOkay {
+		log.Fatalf("Position - Error code %d", c)
+	}
+
 	for 1 == 1 {
-		// Make sure you update your Context as well
-		ctx.Update()
-
-		var value int
-
-		// Replace with whatever you want
-		if status, value := dev.GetFloat(OpenHMD.FloatValueRotationQuat); status == 0 {
-			fmt.Printf("Value: %d\n", value)
-		} else {
-			fmt.Printf("Error code: %d", status)
-		}
-
-		time.Sleep(1 * time.Second)
+		log.Printf("Rotation: %f %f %f %f\nPosition: %f %f %f\n", r[0], r[1], r[2], r[3], p[0], p[1], p[2])
+		time.Sleep(time.Millisecond * 100) // just so it doesn't get angry
 	}
 }
 ```
