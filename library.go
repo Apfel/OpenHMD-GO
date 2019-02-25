@@ -29,7 +29,6 @@ package openhmd
 import "C"
 
 import (
-	"strings"
 	"unsafe"
 )
 
@@ -70,16 +69,9 @@ func (c *Context) Probe() int {
 
 // GetString fetches a string from OpenHMD.
 func GetString(desc StringDescription) (StatusCode, string) {
-	var value **C.char
-	code := StatusCode(C.ohmd_gets(C.ohmd_string_description(desc), value))
-
-	// I can't len() over a **C.Char, sadly
-	str := make([]string, StringSize)
-	for i, s := range (*[1 << 30]*C.char)(unsafe.Pointer(value))[:StringSize:StringSize] {
-		str[i] = C.GoString(s)
-	}
-
-	return code, strings.Join(str, " ")
+	var value string
+	code := StatusCode(C.ohmd_gets(C.ohmd_string_description(desc), (**C.char)(unsafe.Pointer(&value))))
+	return code, value
 }
 
 // ListGetString gets device description from enumeration list index.
