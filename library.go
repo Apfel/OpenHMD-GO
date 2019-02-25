@@ -126,10 +126,10 @@ func (d *Device) Close() StatusCode {
 }
 
 // GetFloat fetches one float value.
-func (d *Device) GetFloat(value FloatValue, index, length int) (StatusCode, float32) {
+func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
 	floats := make([]float32, length)
-	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), (*C.float)(&floats[index]))) // (unsafe.Pointer(&floats))
-	return code, floats[index]
+	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), (*C.float)(unsafe.Pointer(&floats))))
+	return code, floats
 }
 
 // GetInt fechtes int values.
