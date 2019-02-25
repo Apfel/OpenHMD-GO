@@ -3,38 +3,38 @@
 #include "handler.h"
 #include <openhmd.h>
 
-int getfloatsingle(ohmd_device* dev, ohmd_float_value type, float out) {
+int getfloat(ohmd_device* dev, ohmd_float_value type, float out) {
     return ohmd_device_getf(dev, type, &out);
 }
 
-int getfloatmulti(ohmd_device* dev, ohmd_float_value type, float out[]) {
+int getfloats(ohmd_device* dev, ohmd_float_value type, float out[]) {
     return ohmd_device_getf(dev, type, &out);
 }
 
 
-int setfloatsingle(ohmd_device* dev, ohmd_float_value type, float in) {
+int setfloat(ohmd_device* dev, ohmd_float_value type, float in) {
     return ohmd_device_setf(dev, type, &in);
 }
 
-int setfloatmulti(ohmd_device* dev, ohmd_float_value type, float in[]) {
+int setfloats(ohmd_device* dev, ohmd_float_value type, float in[]) {
     return ohmd_device_setf(dev, type, &in);
 }
 
 
-int getintsingle(ohmd_device* dev, ohmd_int_value type, int out) {
+int getint(ohmd_device* dev, ohmd_int_value type, int out) {
     return ohmd_device_geti(dev, type, &out);
 }
 
-int getintmulti(ohmd_device* dev, ohmd_int_value type, int out[]) {
+int getints(ohmd_device* dev, ohmd_int_value type, int out[]) {
     return ohmd_device_geti(dev, type, &out);
 }
 
 
-int setintsingle(ohmd_device* dev, ohmd_int_value type, int in) {
+int setint(ohmd_device* dev, ohmd_int_value type, int in) {
     return ohmd_device_seti(dev, type, &in);
 }
 
-int setintmulti(ohmd_device* dev, ohmd_int_value type, int in[]) {
+int setints(ohmd_device* dev, ohmd_int_value type, int in[]) {
     return ohmd_device_seti(dev, type, &in);
 }
 

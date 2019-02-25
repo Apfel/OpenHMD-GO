@@ -129,17 +129,17 @@ func (d *Device) Close() StatusCode {
 	return StatusCode(C.ohmd_close_device(d.c))
 }
 
-// GetFloatSingle fetches one float value.
-func (d *Device) GetFloatSingle(value FloatValue, input float32) (StatusCode, float32) {
+// GetFloat fetches one float value.
+func (d *Device) GetFloat(value FloatValue) (StatusCode, float32) {
 	var val C.float
-	code := StatusCode(C.getfloatsingle(d.c, C.ohmd_float_value(value), val))
+	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value), val))
 	return code, float32(val)
 }
 
-// GetFloatMulti fetches multiple float values.
-func (d *Device) GetFloatMulti(value FloatValue, length int) (StatusCode, []float32) {
+// GetFloats fetches multiple float values.
+func (d *Device) GetFloats(value FloatValue, length int) (StatusCode, []float32) {
 	val := make([]C.float, length)
-	code := StatusCode(C.setfloatmulti(d.c, C.ohmd_float_value(value), val))
+	code := StatusCode(C.setfloats(d.c, C.ohmd_float_value(value), val))
 
 	vals := make([]float32, length)
 	for i, v := range val {
@@ -149,17 +149,17 @@ func (d *Device) GetFloatMulti(value FloatValue, length int) (StatusCode, []floa
 	return code, vals
 }
 
-// GetIntSingle fechtes one int value.
-func (d *Device) GetIntSingle(value IntValue, input int) (StatusCode, int) {
+// GetInt fechtes one int value.
+func (d *Device) GetInt(value IntValue) (StatusCode, int) {
 	var val C.int
-	code := StatusCode(C.getintsingle(d.c, C.ohmd_int_value(value), val))
+	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value), val))
 	return code, int(val)
 }
 
-// GetIntMulti fetches multiple int values.
-func (d *Device) GetIntMulti(value IntValue, length int) (StatusCode, []int) {
+// GetInts fetches multiple int values.
+func (d *Device) GetInts(value IntValue, length int) (StatusCode, []int) {
 	val := make([]C.int, length)
-	code := StatusCode(C.getintmulti(d.c, C.ohmd_int_value(value), val))
+	code := StatusCode(C.getints(d.c, C.ohmd_int_value(value), val))
 
 	vals := make([]int, length)
 	for i, v := range val {
@@ -169,34 +169,34 @@ func (d *Device) GetIntMulti(value IntValue, length int) (StatusCode, []int) {
 	return code, vals
 }
 
-// SetFloatSingle sets one float value.
-func (d *Device) SetFloatSingle(value FloatValue, input float32) StatusCode {
-	return StatusCode(C.setfloatsingle(d.c, C.ohmd_float_value(value), C.float(input)))
+// SetFloat sets one float value.
+func (d *Device) SetFloat(value FloatValue, input float32) StatusCode {
+	return StatusCode(C.setfloat(d.c, C.ohmd_float_value(value), C.float(input)))
 }
 
-// SetFloatMulti sets multiple float values.
-func (d *Device) SetFloatMulti(value FloatValue, input []float32) StatusCode {
+// SetFloats sets multiple float values.
+func (d *Device) SetFloats(value FloatValue, input []float32) StatusCode {
 	val := make([]C.float, len(input))
 	for i, v := range input {
 		val[i] = C.float(v)
 	}
 
-	return StatusCode(C.setfloatmulti(d.c, C.ohmd_float_value(value), val))
+	return StatusCode(C.setfloats(d.c, C.ohmd_float_value(value), val))
 }
 
-// SetIntSingle sets one int value.
-func (d *Device) SetIntSingle(value IntValue, input int) StatusCode {
-	return StatusCode(C.setintsingle(d.c, C.ohmd_int_value(value), C.int(input)))
+// SetInt sets one int value.
+func (d *Device) SetInt(value IntValue, input int) StatusCode {
+	return StatusCode(C.setint(d.c, C.ohmd_int_value(value), C.int(input)))
 }
 
-// SetIntMulti sets multiple int values.
-func (d *Device) SetIntMulti(value IntValue, input []int) StatusCode {
+// SetInts sets multiple int values.
+func (d *Device) SetInts(value IntValue, input []int) StatusCode {
 	val := make([]C.int, len(input))
 	for i, v := range input {
 		val[i] = C.int(v)
 	}
 
-	return StatusCode(C.setintmulti(d.c, C.ohmd_int_value(value), val))
+	return StatusCode(C.setints(d.c, C.ohmd_int_value(value), val))
 }
 
 // SetData sets direct data for a device.
