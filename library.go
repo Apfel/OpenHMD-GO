@@ -24,12 +24,8 @@
 
 package openhmd
 
-/*
-#include "OpenHMD/include/openhmd.h"
-#include "handler.h"
-
-#cgo LDFLAGS: -L. -lopenhmd
-*/
+//#include "OpenHMD/include/openhmd.h"
+//#cgo LDFLAGS: -L. -lopenhmd
 import "C"
 
 import (
@@ -130,73 +126,27 @@ func (d *Device) Close() StatusCode {
 }
 
 // GetFloat fetches one float value.
-func (d *Device) GetFloat(value FloatValue) (StatusCode, float32) {
-	var val C.float
-	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value), val))
-	return code, float32(val)
+func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
+	floats := make([]float32, length)
+	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), (*C.float)(unsafe.Pointer(&floats))))
+	return code, floats
 }
 
-// GetFloats fetches multiple float values.
-func (d *Device) GetFloats(value FloatValue, length int) (StatusCode, []float32) {
-	val := make([]C.float, length)
-	code := StatusCode(C.setfloats(d.c, C.ohmd_float_value(value), val))
-
-	vals := make([]float32, length)
-	for i, v := range val {
-		vals[i] = float32(v)
-	}
-
-	return code, vals
-}
-
-// GetInt fechtes one int value.
-func (d *Device) GetInt(value IntValue) (StatusCode, int) {
-	var val C.int
-	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value), val))
-	return code, int(val)
-}
-
-// GetInts fetches multiple int values.
-func (d *Device) GetInts(value IntValue, length int) (StatusCode, []int) {
-	val := make([]C.int, length)
-	code := StatusCode(C.getints(d.c, C.ohmd_int_value(value), val))
-
-	vals := make([]int, length)
-	for i, v := range val {
-		vals[i] = int(v)
-	}
-
-	return code, vals
+// GetInt fechtes int values.
+func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int) {
+	val := make([]int, length)
+	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), (*C.int)(unsafe.Pointer(&val))))
+	return code, val
 }
 
 // SetFloat sets one float value.
-func (d *Device) SetFloat(value FloatValue, input float32) StatusCode {
-	return StatusCode(C.setfloat(d.c, C.ohmd_float_value(value), C.float(input)))
-}
-
-// SetFloats sets multiple float values.
-func (d *Device) SetFloats(value FloatValue, input []float32) StatusCode {
-	val := make([]C.float, len(input))
-	for i, v := range input {
-		val[i] = C.float(v)
-	}
-
-	return StatusCode(C.setfloats(d.c, C.ohmd_float_value(value), val))
+func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
+	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), (*C.float)(unsafe.Pointer(&input))))
 }
 
 // SetInt sets one int value.
-func (d *Device) SetInt(value IntValue, input int) StatusCode {
-	return StatusCode(C.setint(d.c, C.ohmd_int_value(value), C.int(input)))
-}
-
-// SetInts sets multiple int values.
-func (d *Device) SetInts(value IntValue, input []int) StatusCode {
-	val := make([]C.int, len(input))
-	for i, v := range input {
-		val[i] = C.int(v)
-	}
-
-	return StatusCode(C.setints(d.c, C.ohmd_int_value(value), val))
+func (d *Device) SetInt(value IntValue, input []int) StatusCode {
+	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), (*C.int)(unsafe.Pointer(&input))))
 }
 
 // SetData sets direct data for a device.
