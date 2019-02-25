@@ -21,16 +21,18 @@ import (
 	openhmd "github.com/Apfel/OpenHMD-GO"
 )
 
+var rot, pos []float32
+
 func main() {
 	context := openhmd.Create()
 	if context == nil {
-		log.Fatalln("Context couldn't be opened.")
+		log.Fatalln("Context couldn't be opened.\n")
 	}
 
 	if count := context.Probe(); count == 0 {
-		log.Fatalln("No devices.")
+		log.Fatalln("No devices.\n")
 	} else {
-		log.Printf("Device count: %d", count)
+		log.Printf("Device count: %d\n", count)
 	}
 
 	// define your device's ID here
@@ -38,25 +40,28 @@ func main() {
 
 	device := context.ListOpenDevice(id)
 	if device == nil || len(context.GetError()) != 0 {
-		log.Fatalf("Device couldn't be opened. Error: %s", context.GetError())
+		log.Fatalf("Device couldn't be opened. Error: %s\n", context.GetError())
 	} else {
-		log.Printf("Opened device %s, vendor is %s. ID: %s", context.ListGetString(id, openhmd.StringValueProduct),
+		log.Printf("Opened device %s, vendor is %s. ID: %s\n", context.ListGetString(id, openhmd.StringValueProduct),
 			context.ListGetString(id, openhmd.StringValueVendor), context.ListGetString(id, openhmd.StringValuePath))
 	}
 
-	c, r := device.GetFloat(openhmd.FloatValueRotationQuat, 4)
-	if c != openhmd.StatusCodeOkay {
-		log.Fatalf("Rotation - Error code %d", c)
+	if c, rot := device.GetFloat(openhmd.FloatValueRotationQuat, 4); c != openhmd.StatusCodeOkay {
+		log.Fatalf("Rotation - Error code %d\n", c)
+	} else {
+		_ = rot // G o o g l e
 	}
 
-	c, p := device.GetFloat(openhmd.FloatValuePositionVector, 3)
-	if c != openhmd.StatusCodeOkay {
-		log.Fatalf("Position - Error code %d", c)
+	if c, pos := device.GetFloat(openhmd.FloatValuePositionVector, 3); c != openhmd.StatusCodeOkay {
+		log.Fatalf("Position - Error code %d\n", c)
+	} else {
+		_ = pos // G o o g l e
 	}
 
 	for 1 == 1 {
-		log.Printf("Rotation: %f %f %f %f\nPosition: %f %f %f\n", r[0], r[1], r[2], r[3], p[0], p[1], p[2])
+		log.Printf("Rotation: %f %f %f %f\nPosition: %f %f %f\n", rot[0], rot[1], rot[2], rot[3], pos[0], pos[1], pos[2])
 		time.Sleep(time.Millisecond * 100) // just so it doesn't get angry
 	}
 }
+
 ```
