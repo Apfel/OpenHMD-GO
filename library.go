@@ -24,13 +24,53 @@
 
 package openhmd
 
-//#include "OpenHMD/include/openhmd.h"
-//#cgo LDFLAGS: -L. -lopenhmd
+/*
+#include "OpenHMD/include/openhmd.h"
+#cgo LDFLAGS: -L. -lopenhmd
+
+float* setfarray;
+int* setiarray;
+
+float* getfarray;
+int* getiarray;
+
+int size;
+
+void setfloat(int index, float value) {
+	setfarray[index] = value;
+}
+
+void setint(int index, int value) {
+	setiarray[index] = value;
+}
+
+float getfloat(int index) {
+	return getfarray[index];
+}
+
+int getint(int index) {
+	return getiarray[index];
+}
+
+int processsetf(ohmd_device* dev, ohmd_float_value type) {
+	return ohmd_device_setf(dev, type, setfarray);
+}
+
+int processseti(ohmd_device* dev, ohmd_int_value type) {
+	return ohmd_device_seti(dev, type, setiarray);
+}
+
+int processgetf(ohmd_device* dev, ohmd_float_value type) {
+	return ohmd_device_getf(dev, type, getfarray);
+}
+
+int processgeti(ohmd_device* dev, ohmd_int_value type) {
+	return ohmd_device_geti(dev, type, getiarray);
+}
+*/
 import "C"
 
-import (
-	"unsafe"
-)
+import "unsafe"
 
 // Create makes an OpenHMD context.
 // Returns nil if the context can't allocate memory.
@@ -70,7 +110,7 @@ func (c *Context) Probe() int {
 // GetString fetches a string from OpenHMD.
 func GetString(desc StringDescription) (StatusCode, string) {
 	var value string
-	code := StatusCode(C.ohmd_gets(C.ohmd_string_description(desc), (**C.char)(unsafe.Pointer(&value))))
+	code := StatusCodeUnsupported //StatusCode(C.ohmd_gets(C.ohmd_string_description(desc), (**C.char)(unsafe.Pointer(&value))))
 	return code, value
 }
 
@@ -119,26 +159,46 @@ func (d *Device) Close() StatusCode {
 
 // GetFloat fetches one float value.
 func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
-	floats := make([]float32, length)
-	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), (*C.float)(unsafe.Pointer(&floats))))
-	return code, floats
+	code := StatusCode(C.processgetf(d.c, C.ohmd_float_value(value)))
+	if code != StatusCodeOkay {
+		return code, nil
+	}
+	array := make([]float32, length)
+	for count := 0; count != length; count++ {
+		array[count] = float32(C.getfloat(C.int(count)))
+	}
+	return code, array
 }
 
 // GetInt fechtes int values.
 func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int) {
-	val := make([]int, length)
-	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), (*C.int)(unsafe.Pointer(&val))))
-	return code, val
+	code := StatusCode(C.processgeti(d.c, C.ohmd_int_value(value)))
+	if code != StatusCodeOkay {
+		return code, nil
+	}
+	array := make([]int, length)
+	for count := 0; count != length; count++ {
+		array[count] = int(C.getint(C.int(count)))
+	}
+	return code, array
 }
 
 // SetFloat sets one float value.
 func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
-	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), (*C.float)(unsafe.Pointer(&input))))
+	for i, v := range input {
+		C.setfloat(C.int(i), C.float(v))
+	}
+
+	return StatusCode(C.processsetf(d.c, C.ohmd_float_value(value)))
 }
 
 // SetInt sets one int value.
 func (d *Device) SetInt(value IntValue, input []int) StatusCode {
-	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), (*C.int)(unsafe.Pointer(&input))))
+	for i, v := range input {
+		C.setint(C.int(i), C.int(v))
+	}
+
+	return StatusCode(C.processseti(d.c, C.ohmd_int_value(value)))
 }
 
 // SetData sets direct data for a device.
