@@ -29,43 +29,25 @@ package openhmd
 #cgo LDFLAGS: -L. -lopenhmd
 
 float setfarray[4];
-int setiarray [4];
+int setiarray[4];
 
 float getfarray[4];
-int getiarray [4];
+int getiarray[4];
 
-int size;
-
-void setfloat(int index, float value) {
-	setfarray[index] = value;
+float* setfarraypointer() {
+	return setfarray;
 }
 
-void setint(int index, int value) {
-	setiarray[index] = value;
+float* getfarraypointer() {
+	return getfarray;
 }
 
-float getfloat(int index) {
-	return getfarray[index];
+int* setiarraypointer() {
+	return setiarray;
 }
 
-int getint(int index) {
-	return getiarray[index];
-}
-
-int processsetf(ohmd_device* dev, ohmd_float_value type) {
-	return ohmd_device_setf(dev, type, setfarray);
-}
-
-int processseti(ohmd_device* dev, ohmd_int_value type) {
-	return ohmd_device_seti(dev, type, setiarray);
-}
-
-int processgetf(ohmd_device* dev, ohmd_float_value type) {
-	return ohmd_device_getf(dev, type, getfarray);
-}
-
-int processgeti(ohmd_device* dev, ohmd_int_value type) {
-	return ohmd_device_geti(dev, type, getiarray);
+int* getiarraypointer() {
+	return getiarray;
 }
 */
 import "C"
@@ -159,26 +141,26 @@ func (d *Device) Close() StatusCode {
 
 // GetFloat fetches one float value.
 func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
-	code := StatusCode(C.processgetf(d.c, C.ohmd_float_value(value)))
+	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), C.getfarraypointer()))
 	if code != StatusCodeOkay {
 		return code, nil
 	}
 	array := make([]float32, length)
 	for count := 0; count != length; count++ {
-		array[count] = float32(C.getfloat(C.int(count)))
+		array[count] = float32(C.getfarray[C.int(count)])
 	}
 	return code, array
 }
 
 // GetInt fechtes int values.
 func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int) {
-	code := StatusCode(C.processgeti(d.c, C.ohmd_int_value(value)))
+	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), C.getiarraypointer()))
 	if code != StatusCodeOkay {
 		return code, nil
 	}
 	array := make([]int, length)
 	for count := 0; count != length; count++ {
-		array[count] = int(C.getint(C.int(count)))
+		array[count] = int(C.getiarray[C.int(count)])
 	}
 	return code, array
 }
@@ -186,19 +168,19 @@ func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int) {
 // SetFloat sets one float value.
 func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
 	for i, v := range input {
-		C.setfloat(C.int(i), C.float(v))
+		C.setfarray[C.int(i)] = C.float(v)
 	}
 
-	return StatusCode(C.processsetf(d.c, C.ohmd_float_value(value)))
+	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), C.setfarraypointer()))
 }
 
 // SetInt sets one int value.
 func (d *Device) SetInt(value IntValue, input []int) StatusCode {
 	for i, v := range input {
-		C.setint(C.int(i), C.int(v))
+		C.setiarray[C.int(i)] = C.int(v)
 	}
 
-	return StatusCode(C.processseti(d.c, C.ohmd_int_value(value)))
+	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), C.setiarraypointer()))
 }
 
 // SetData sets direct data for a device.
