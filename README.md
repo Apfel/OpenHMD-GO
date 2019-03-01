@@ -21,8 +21,6 @@ import (
 	openhmd "github.com/Apfel/OpenHMD-GO"
 )
 
-var rot, pos []float32
-
 func main() {
 	context := openhmd.Create()
 	if context == nil {
@@ -46,21 +44,19 @@ func main() {
 			context.ListGetString(id, openhmd.StringValueVendor), context.ListGetString(id, openhmd.StringValuePath))
 	}
 
-	if c, rot := device.GetFloat(openhmd.FloatValueRotationQuat, 4); c != openhmd.StatusCodeOkay {
+	c, rot := device.GetFloat(openhmd.FloatValueRotationQuat, 4)
+	if c != openhmd.StatusCodeOkay {
 		log.Fatalf("Rotation - Error code %d\n", c)
-	} else {
-		_ = rot // G o o g l e
 	}
 
-	if c, pos := device.GetFloat(openhmd.FloatValuePositionVector, 3); c != openhmd.StatusCodeOkay {
+	c, pos := device.GetFloat(openhmd.FloatValuePositionVector, 3)
+	if c != openhmd.StatusCodeOkay {
 		log.Fatalf("Position - Error code %d\n", c)
-	} else {
-		_ = pos // G o o g l e
 	}
 
 	for 1 == 1 {
 		log.Printf("Rotation: %f %f %f %f\nPosition: %f %f %f\n", rot[0], rot[1], rot[2], rot[3], pos[0], pos[1], pos[2])
-		time.Sleep(time.Millisecond * 100) // just so it doesn't get angry
+		time.Sleep(time.Millisecond * 100)
 	}
 }
 
