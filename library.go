@@ -28,11 +28,11 @@ package openhmd
 #include "OpenHMD/include/openhmd.h"
 #cgo LDFLAGS: -L. -lopenhmd
 
-float* setfarray;
-int* setiarray;
+float setfarray[4];
+int setiarray [4];
 
-float* getfarray;
-int* getiarray;
+float getfarray[4];
+int getiarray [4];
 
 int size;
 
