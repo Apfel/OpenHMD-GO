@@ -28,6 +28,9 @@ package openhmd
 //#include "OpenHMD/include/openhmd.h"
 import "C"
 
+// ArraySize defines all used Integer and Float array sizes.
+type ArraySize int
+
 // StatusCode - Response status codes.
 type StatusCode C.ohmd_status
 

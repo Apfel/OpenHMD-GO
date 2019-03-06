@@ -25,33 +25,10 @@
 package openhmd
 
 /*
-#include "OpenHMD/include/openhmd.h"
+#include <openhmd/openhmd.h>
 #cgo LDFLAGS: -L. -lopenhmd
-
-float setfarray[4];
-int setiarray[4];
-
-float getfarray[4];
-int getiarray[4];
-
-float* setfarraypointer() {
-	return setfarray;
-}
-
-float* getfarraypointer() {
-	return getfarray;
-}
-
-int* setiarraypointer() {
-	return setiarray;
-}
-
-int* getiarraypointer() {
-	return getiarray;
-}
 */
 import "C"
-
 import "unsafe"
 
 // Create makes an OpenHMD context.
@@ -96,7 +73,7 @@ func GetString(desc StringDescription) (StatusCode, string) {
 	return code, value
 }
 
-// ListGetString gets device description from enumeration list index.
+// ListGetString gets device description from enumeration list index.nt)
 func (c *Context) ListGetString(deviceIndex int, value StringValue) string {
 	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
 }
@@ -118,7 +95,7 @@ func (c *Context) ListOpenDeviceSettings(index int, settings DeviceSettings) *De
 	return &Device{c: C.ohmd_list_open_device_s(c.c, C.int(index), settings.c)}
 }
 
-// CreateSettings creates a device settings instance.
+// CreateSettings creates a device settings instance.nt)
 func (c *Context) CreateSettings() *DeviceSettings {
 	settings := C.ohmd_device_settings_create(c.c)
 
@@ -139,48 +116,24 @@ func (d *Device) Close() StatusCode {
 	return StatusCode(C.ohmd_close_device(d.c))
 }
 
-// GetFloat fetches one float value.
-func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
-	code := StatusCode(C.ohmd_device_getf(d.c, C.ohmd_float_value(value), C.getfarraypointer()))
-	if code != StatusCodeOkay {
-		return code, nil
-	}
-	array := make([]float32, length)
-	for count := 0; count != length; count++ {
-		array[count] = float32(C.getfarray[C.int(count)])
-	}
-	return code, array
+// GetFloat fetches (a) float value(s).
+func (d *Device) GetFloat(value FloatValue, length ArraySize) (StatusCode, []float32) {
+	return d.getfloat(value, length)
 }
 
-// GetInt fechtes int values.
-func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int) {
-	code := StatusCode(C.ohmd_device_geti(d.c, C.ohmd_int_value(value), C.getiarraypointer()))
-	if code != StatusCodeOkay {
-		return code, nil
-	}
-	array := make([]int, length)
-	for count := 0; count != length; count++ {
-		array[count] = int(C.getiarray[C.int(count)])
-	}
-	return code, array
-}
-
-// SetFloat sets one float value.
+/* SetFloat sets (a) float value(s).
 func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
-	for i, v := range input {
-		C.setfarray[C.int(i)] = C.float(v)
-	}
+	return d.setfloat(value, input)
+}*/
 
-	return StatusCode(C.ohmd_device_setf(d.c, C.ohmd_float_value(value), C.setfarraypointer()))
+// GetInt fechtes (a) int value(s).
+func (d *Device) GetInt(value IntValue, length ArraySize) (StatusCode, []int) {
+	return StatusCodeOkay, nil
 }
 
-// SetInt sets one int value.
+// SetInt sets (a) int value(s).
 func (d *Device) SetInt(value IntValue, input []int) StatusCode {
-	for i, v := range input {
-		C.setiarray[C.int(i)] = C.int(v)
-	}
-
-	return StatusCode(C.ohmd_device_seti(d.c, C.ohmd_int_value(value), C.setiarraypointer()))
+	return StatusCodeOkay // Will be finished later
 }
 
 // SetData sets direct data for a device.
