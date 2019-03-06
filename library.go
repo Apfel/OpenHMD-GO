@@ -118,7 +118,7 @@ func (d *Device) Close() StatusCode {
 
 // GetFloat fetches (a) float value(s).
 func (d *Device) GetFloat(value FloatValue, length ArraySize) (StatusCode, []float32) {
-	return d.getfloat(value, length)
+	return getfloat(d, value, length)
 }
 
 /* SetFloat sets (a) float value(s).
