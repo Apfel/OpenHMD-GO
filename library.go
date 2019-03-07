@@ -25,16 +25,18 @@
 package openhmd
 
 /*
+int iarray[16];
+int getint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_geti(device, value, iarray); }
+int getivalue(int index) { return iarray[index]; }
+*/
+
+/*
 #include <openhmd/openhmd.h>
 #cgo LDFLAGS: -L. -lopenhmd
 
 float farray[16];
 int getfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_getf(device, value, farray); }
 float getfvalue(int index) { return farray[index]; }
-
-int iarray[16];
-int getint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_geti(device, value, iarray); }
-int getivalue(int index) { return iarray[index]; }
 
 */
 import "C"
@@ -148,17 +150,18 @@ func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
 
 // GetInt fechtes (a) int value(s).
 func (d *Device) GetInt(value IntValue, length ArraySize) (StatusCode, []int32) {
-	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
+	/*code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
 
-	/*if code != StatusCodeOkay {
+	if code != StatusCodeOkay {
 		return code, nil
-	}*/
+	}
 
 	array := make([]int32, length)
 	for i := 0; i != int(length); i++ {
 		array[i] = int32(C.getivalue(C.int(i)))
 	}
-	return code, array
+	return code, array*/
+	return StatusCodeOkay, nil
 }
 
 // SetInt sets (a) int value(s).
