@@ -40,6 +40,12 @@ import "C"
 
 import "unsafe"
 
+func init() {
+	if RequireVersion(0, 3, 0) == StatusCodeUnsupported {
+		panic("OpenHMD-GO: Your installation is too old! OpenHMD-GO requires you to use OpenHMD 0.3.0.")
+	}
+}
+
 // Create makes an OpenHMD context.
 // Returns nil if the context can't allocate memory.
 func Create() *Context {
