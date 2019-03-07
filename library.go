@@ -130,9 +130,9 @@ func (d *Device) Close() StatusCode {
 func (d *Device) GetFloat(value FloatValue, length ArraySize) (StatusCode, []float32) {
 	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value)))
 
-	if code != StatusCodeOkay {
+	/*if code != StatusCodeOkay {
 		return code, nil
-	}
+	}*/
 
 	array := make([]float32, length)
 	for i := 0; i != int(length); i++ {
@@ -150,9 +150,9 @@ func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
 func (d *Device) GetInt(value IntValue, length ArraySize) (StatusCode, []int32) {
 	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
 
-	if code != StatusCodeOkay {
+	/*if code != StatusCodeOkay {
 		return code, nil
-	}
+	}*/
 
 	array := make([]int32, length)
 	for i := 0; i != int(length); i++ {
