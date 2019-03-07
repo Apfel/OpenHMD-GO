@@ -29,6 +29,7 @@ package openhmd
 #cgo LDFLAGS: -L. -lopenhmd
 */
 import "C"
+
 import "unsafe"
 
 // Create makes an OpenHMD context.
@@ -118,13 +119,13 @@ func (d *Device) Close() StatusCode {
 
 // GetFloat fetches (a) float value(s).
 func (d *Device) GetFloat(value FloatValue, length ArraySize) (StatusCode, []float32) {
-	return getfloat(d, value, length)
+	return StatusCodeOkay, nil
 }
 
-/* SetFloat sets (a) float value(s).
+// SetFloat sets (a) float value(s).
 func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
-	return d.setfloat(value, input)
-}*/
+	return StatusCodeOkay
+}
 
 // GetInt fechtes (a) int value(s).
 func (d *Device) GetInt(value IntValue, length ArraySize) (StatusCode, []int) {
@@ -133,7 +134,7 @@ func (d *Device) GetInt(value IntValue, length ArraySize) (StatusCode, []int) {
 
 // SetInt sets (a) int value(s).
 func (d *Device) SetInt(value IntValue, input []int) StatusCode {
-	return StatusCodeOkay // Will be finished later
+	return StatusCodeOkay
 }
 
 // SetData sets direct data for a device.

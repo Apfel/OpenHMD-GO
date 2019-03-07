@@ -24,8 +24,10 @@
 
 package openhmd
 
-//#cgo LDFLAGS: -L. -lopenhmd
-//#include "OpenHMD/include/openhmd.h"
+/*
+#include <openhmd/openhmd.h>
+#cgo LDFLAGS: -L. -lopenhmd
+*/
 import "C"
 
 // All known array sizes.
