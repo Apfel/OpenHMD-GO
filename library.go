@@ -28,11 +28,11 @@ package openhmd
 #include <openhmd/openhmd.h>
 #cgo LDFLAGS: -L. -lopenhmd
 
-float* farray;
+float farray[16];
 int getfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_getf(device, value, farray); }
 float getfvalue(int index) { return farray[index]; }
 
-int* iarray;
+int iarray[16];
 int getint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_geti(device, value, iarray); }
 int getivalue(int index) { return iarray[index]; }
 
