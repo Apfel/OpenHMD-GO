@@ -27,6 +27,10 @@ package openhmd
 /*
 #include <openhmd/openhmd.h>
 #cgo LDFLAGS: -L. -lopenhmd
+
+float array[16];
+int getfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_getf(device, value, array); }
+float getvalue(int index) { return array[index]; }
 */
 import "C"
 
@@ -119,7 +123,14 @@ func (d *Device) Close() StatusCode {
 
 // GetFloat fetches (a) float value(s).
 func (d *Device) GetFloat(value FloatValue, length ArraySize) (StatusCode, []float32) {
-	return StatusCodeOkay, nil
+	code := C.getfloat(d.c, C.ohmd_float_value(value))
+	array := make([]float32, length)
+
+	for i := 0; i != int(length); i++ {
+		array[i] = float32(C.getvalue(C.int(i)))
+	}
+
+	return StatusCode(code), array
 }
 
 // SetFloat sets (a) float value(s).
