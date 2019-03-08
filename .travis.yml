@@ -4,19 +4,22 @@ go:
  - stable
 install:
 # Dependencies
-- sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev meson ninja-build
+- sudo apt update && sudo apt upgrade -y # Required to install everything
+- sudo apt install libudev-dev libusb-1.0-0-dev meson ninja-build libtool
 - git clone https://github.com/OpenHMD/OpenHMD.git
 - git clone https://github.com/OpenHMD/hidapi.git
 # HIDAPI
 - cd hidapi
-- autoreconf --install --verbose --force
-- ./configure
+- autoreconf --install --verbose --force && ./configure
 - make && sudo make install
 # OpenHMD
 - cd ../OpenHMD
-- meson ./build
+- meson ./build -Dexamples=simple
 - ninja -C ./build/ && sudo ninja -C ./build/ install
 - cd ..
+# OpenHMD-GO
+- cd OpenHMD-GO
+# From now on, Travis takes over.
 jobs:
   include:
     - stage: build
