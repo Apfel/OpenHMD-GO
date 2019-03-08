@@ -16,8 +16,7 @@ install:
 - ./autogen.sh && ./configure
 - make && sudo make install
 - cd ..
-# OpenHMD-GO
-- cd OpenHMD-GO
+- rm -rf hidapi OpenHMD
 # From now on, Travis takes over.
 jobs:
   include:
