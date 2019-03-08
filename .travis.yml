@@ -1,0 +1,24 @@
+language: go
+go: 
+ - stable
+install:
+# Dependencies
+- sudo apt install libudev-dev libusb-dev meson ninja-build
+- git clone https://github.com/OpenHMD/OpenHMD.git
+- git clone https://github.com/OpenHMD/hidapi.git
+# HIDAPI
+- cd hidapi
+- autoreconf --install --verbose --force
+- ./configure
+- make && sudo make install
+# OpenHMD
+- cd ../OpenHMD
+- meson ./build
+- ninja -C ./build/ && sudo ninja -C ./build/ install
+- cd ..
+jobs:
+  include:
+    - stage: build
+      script: go build
+stages:
+- build
