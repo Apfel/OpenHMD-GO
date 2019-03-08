@@ -4,7 +4,7 @@ go:
  - stable
 install:
 # Dependencies
-- sudo apt install libudev-dev libusb-1.0-0-dev meson ninja-build
+- sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev meson ninja-build
 - git clone https://github.com/OpenHMD/OpenHMD.git
 - git clone https://github.com/OpenHMD/hidapi.git
 # HIDAPI
