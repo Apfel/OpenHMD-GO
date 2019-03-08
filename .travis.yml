@@ -13,8 +13,8 @@ install:
 - make && sudo make install
 # OpenHMD
 - cd ../OpenHMD
-- mkdir build && meson ./build -Dexamples=simple
-- ninja -C ./build/ && sudo ninja -C ./build/ install
+- ./autogen.sh && ./configure [--enable-openglexample]
+- make && sudo make install
 - cd ..
 # OpenHMD-GO
 - cd OpenHMD-GO
