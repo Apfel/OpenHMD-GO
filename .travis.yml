@@ -13,7 +13,7 @@ install:
 - make && sudo make install
 # OpenHMD
 - cd ../OpenHMD
-- ./autogen.sh && ./configure [--enable-openglexample]
+- ./autogen.sh && ./configure
 - make && sudo make install
 - cd ..
 # OpenHMD-GO
