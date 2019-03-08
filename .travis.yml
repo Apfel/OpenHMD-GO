@@ -13,7 +13,7 @@ install:
 - make && sudo make install
 # OpenHMD
 - cd ../OpenHMD
-- meson ./build -Dexamples=simple
+- mkdir build && meson ./build -Dexamples=simple
 - ninja -C ./build/ && sudo ninja -C ./build/ install
 - cd ..
 # OpenHMD-GO
