@@ -22,5 +22,8 @@ jobs:
   include:
     - stage: build
       script: go build
+    - stage: test
+      script: go test -v
 stages:
 - build
+- test
