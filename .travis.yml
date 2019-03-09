@@ -2,21 +2,7 @@ dist: xenial
 language: go
 go: 
  - stable
-install:
-# Dependencies
-- sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev meson ninja-build libtool
-- git clone https://github.com/OpenHMD/OpenHMD.git
-- git clone https://github.com/OpenHMD/hidapi.git
-# HIDAPI
-- cd hidapi
-- autoreconf --install --verbose --force && ./configure
-- make && sudo make install
-# OpenHMD
-- cd ../OpenHMD
-- ./autogen.sh && ./configure
-- make && sudo make install
-- cd ..
-- rm -rf hidapi OpenHMD
+install: sh .travis-deps.sh
 # From now on, Travis takes over.
 jobs:
   include:
