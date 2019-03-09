@@ -1,7 +1,5 @@
-dist: xenial
 language: go
-go: 
- - stable
+go: stable
 install: sh .travis-deps.sh
 jobs:
   include:

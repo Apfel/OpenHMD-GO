@@ -1,6 +1,7 @@
 echo "Installing Dependencies"
 sudo apt update
 sudo apt install libudev-dev libusb-1.0-0-dev libtool -y
+pip3 install setuptools meson
 
 echo "Cloning repositories"
 git clone https://github.com/OpenHMD/OpenHMD.git
@@ -14,10 +15,8 @@ cd ..
 
 echo "Installing OpenHMD"
 cd OpenHMD
-mkdir build
-cd build
-cmake .. && make
-sudo make install
-
+autoreconf --install --verbose --force && ./configure
+make && sudo make install
 cd ..
+
 rm -rf hidapi OpenHMD
