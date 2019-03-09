@@ -14,10 +14,8 @@ cd ..
 
 echo "Installing OpenHMD"
 cd OpenHMD
-mkdir build
-cd build
-cmake .. && make
-sudo make install
-
+autoreconf --install --verbose --force && ./configure
+make && sudo make install
 cd ..
+
 rm -rf hidapi OpenHMD
