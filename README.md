@@ -39,7 +39,7 @@ func main() {
 		log.Printf("Using ID %d.", id)
 	}
 
-	context := openhmd.Create()
+	context := openhmd.CreateContext()
 	if context == nil {
 		log.Fatalln("Context couldn't be opened.")
 	}

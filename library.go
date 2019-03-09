@@ -54,9 +54,14 @@ func init() {
 	}
 }
 
-// Create makes an OpenHMD context.
+// GetString fetches a string from OpenHMD.
+func GetString(desc StringDescription) (StatusCode, string) {
+	return StatusCodeInvalidOperation, ""
+}
+
+// CreateContext makes an OpenHMD context.
 // Returns nil if the context can't allocate memory.
-func Create() *Context {
+func CreateContext() *Context {
 	ctx := C.ohmd_ctx_create()
 
 	if ctx == nil {
@@ -77,23 +82,38 @@ func (c *Context) GetError() string {
 	return C.GoString(C.ohmd_ctx_get_error(c.c))
 }
 
-// Update updates the current context
-// to fetch the values for the devices handled by a context.
-func (c *Context) Update() {
-	C.ohmd_ctx_update(c.c)
-}
-
 // Probe for devices.
 // Returns the number of devices found on the system.
 func (c *Context) Probe() int {
 	return int(C.ohmd_ctx_probe(c.c))
 }
 
-// GetString fetches a string from OpenHMD.
-func GetString(desc StringDescription) (StatusCode, string) {
-	var value string
-	code := StatusCodeUnsupported //StatusCode(C.ohmd_gets(C.ohmd_string_description(desc), (**C.char)(unsafe.Pointer(&value))))
-	return code, value
+// Update updates the current context
+// to fetch the values for the devices handled by a context.
+func (c *Context) Update() {
+	C.ohmd_ctx_update(c.c)
+}
+
+// CreateSettings creates a device settings instance.nt)
+func (c *Context) CreateSettings() *DeviceSettings {
+	settings := C.ohmd_device_settings_create(c.c)
+
+	if settings == nil {
+		return nil
+	}
+
+	return &DeviceSettings{c: settings}
+}
+
+// Destroy destroys a device settings instance.
+func (s *DeviceSettings) Destroy() {
+	C.ohmd_device_settings_destroy(s.c)
+}
+
+// SetInt sets the given value for the providen key.
+func (s *DeviceSettings) SetInt(key IntSettings, value int) StatusCode {
+	val := C.int(value)
+	return StatusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &val))
 }
 
 // ListGetString gets device description from enumeration list index.nt)
@@ -114,24 +134,8 @@ func (c *Context) ListOpenDevice(index int) *Device {
 }
 
 // ListOpenDeviceSettings opens a device with additional settings provided.
-func (c *Context) ListOpenDeviceSettings(index int, settings DeviceSettings) *Device {
+func (c *Context) ListOpenDeviceSettings(index int, settings *DeviceSettings) *Device {
 	return &Device{c: C.ohmd_list_open_device_s(c.c, C.int(index), settings.c)}
-}
-
-// CreateSettings creates a device settings instance.nt)
-func (c *Context) CreateSettings() *DeviceSettings {
-	settings := C.ohmd_device_settings_create(c.c)
-
-	if settings == nil {
-		return nil
-	}
-
-	return &DeviceSettings{c: settings}
-}
-
-// Destroy destroys a device settings instance.
-func (s *DeviceSettings) Destroy() {
-	C.ohmd_device_settings_destroy(s.c)
 }
 
 // Close closes the current device.
