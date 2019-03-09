@@ -30,20 +30,10 @@ package openhmd
 */
 import "C"
 
-// All known array sizes.
-const (
-	ArraySizeSingle  ArraySize = 1
-	ArraySizeThree   ArraySize = 3
-	ArraySizeFour    ArraySize = 4
-	ArraySizeSix     ArraySize = 6
-	ArraySizeTen     ArraySize = 10
-	ArraySizeSixteen ArraySize = 16
-)
-
 // StringSize defines the maximum length of a string, including termination, in OpenHMD.
 const StringSize = C.OHMD_STR_SIZE
 
-// All known OpenHMD StatusCodes.
+// All known StatusCodes.
 const (
 	StatusCodeOkay             StatusCode = 0
 	StatusCodeUnknownError     StatusCode = -1
@@ -51,6 +41,7 @@ const (
 	StatusCodeUnsupported      StatusCode = -3
 	StatusCodeInvalidOperation StatusCode = -4
 
+	// You can use this StatusCode for your own errors, if none of the above work for you.
 	StatusCodeUserReserved StatusCode = -16384
 )
 

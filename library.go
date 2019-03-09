@@ -28,13 +28,21 @@ package openhmd
 #include <openhmd/openhmd.h>
 #cgo LDFLAGS: -L. -lopenhmd
 
-float farray[16];
-int getfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_getf(device, value, farray); }
-float getfvalue(int index) { return farray[index]; }
+float getfarray[16];
+int getfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_getf(device, value, getfarray); }
+float getfvalue(int index) { return getfarray[index]; }
 
-int iarray[16];
-int getint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_geti(device, value, iarray); }
-int getivalue(int index) { return iarray[index]; }
+int getiarray[16];
+int getint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_geti(device, value, getiarray); }
+int getivalue(int index) { return getiarray[index]; }
+
+float setfarray[16];
+int setfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_setf(device, value, setfarray); }
+void setfvalue(int index, float value) { setfarray[index] = value; }
+
+int setiarray[16];
+int setint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_seti(device, value, setiarray); }
+void setivalue(int index, int value) { setiarray[index] = value; }
 */
 import "C"
 
@@ -132,43 +140,69 @@ func (d *Device) Close() StatusCode {
 }
 
 // GetFloat fetches (a) float value(s).
-func (d *Device) GetFloat(value FloatValue, length ArraySize) (StatusCode, []float32) {
+func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
 	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value)))
 
 	if code != StatusCodeOkay {
 		return code, nil
 	}
 
+	if length > 16 {
+		return StatusCodeInvalidParameter, nil
+	}
+
 	array := make([]float32, length)
 	for i := 0; i != int(length); i++ {
 		array[i] = float32(C.getfvalue(C.int(i)))
 	}
+
 	return code, array
 }
 
 // SetFloat sets (a) float value(s).
 func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
-	return StatusCodeOkay
+	if len(input) > 16 {
+		return StatusCodeInvalidParameter
+	}
+
+	for i, v := range input {
+		C.setfvalue(C.int(i), C.float(v))
+	}
+
+	return StatusCode(C.setfloat(d.c, C.ohmd_float_value(value)))
 }
 
 // GetInt fechtes (a) int value(s).
-func (d *Device) GetInt(value IntValue, length ArraySize) (StatusCode, []int32) {
-	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
+func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int32) {
+	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value)))
 
 	if code != StatusCodeOkay {
 		return code, nil
 	}
 
+	if length > 16 {
+		return StatusCodeInvalidParameter, nil
+	}
+
 	array := make([]int32, length)
 	for i := 0; i != int(length); i++ {
-		array[i] = int32(C.getivalue(C.int(i)))
+		array[i] = int32(C.getfvalue(C.int(i)))
 	}
+
 	return code, array
 }
 
 // SetInt sets (a) int value(s).
-func (d *Device) SetInt(value IntValue, input []int) StatusCode {
-	return StatusCodeOkay
+func (d *Device) SetInt(value IntValue, input []int32) StatusCode {
+	if len(input) > 16 {
+		return StatusCodeInvalidParameter
+	}
+
+	for i, v := range input {
+		C.setivalue(C.int(i), C.int(v))
+	}
+
+	return StatusCode(C.setint(d.c, C.ohmd_int_value(value)))
 }
 
 // SetData sets direct data for a device.
