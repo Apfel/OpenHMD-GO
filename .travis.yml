@@ -5,7 +5,7 @@ jobs:
   include:
     - stage: build
       script: sh .travis-deps.sh
-    - script: go build
+      script: go build
       script: go test -v
 stages:
 - build
