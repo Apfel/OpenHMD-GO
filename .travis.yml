@@ -3,13 +3,9 @@ language: go
 go: stable
 jobs:
   include:
-    - stage: install
-      script: sh .travis-deps.sh
     - stage: build
-      script: go build
-    - stage: test
+      script: sh .travis-deps.sh
+    - script: go build
       script: go test -v
 stages:
-- install
 - build
-- test
