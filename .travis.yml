@@ -1,11 +1,7 @@
 dist: xenial
 language: go
 go: stable
-jobs:
-  include:
-    - stage: build
-      script: sh .travis-deps.sh
-      script: go build
-      script: go test -v
-stages:
-- build
+script:
+- sh .travis-deps.sh
+- go build
+- go test -v
