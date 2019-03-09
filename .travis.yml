@@ -1,15 +1,15 @@
 dist: xenial
 language: go
-go: 
- - stable
-install: sh .travis-deps.sh
-# From now on, Travis takes over.
+go: stable
 jobs:
   include:
+    - stage: install
+      script: sh .travis-deps.sh
     - stage: build
       script: go build
     - stage: test
       script: go test -v
 stages:
+- install
 - build
 - test
