@@ -11,7 +11,6 @@ go get github.com/Apfel/OpenHMD-GO
 
 #### Note: This module requires OpenHMD. [Click here for help](http://www.openhmd.net/index.php/download/). This module also requires Go 1.12.
 
-### Example Code
 ```go
 package main
 
