@@ -1,8 +1,7 @@
 language: go
 go: stable
 install:
-  - sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev libtool ninja-build python3-pip -y
-  - pip3 install --user --disable-pip-version-check meson
+  - sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev libtool ninja-build python3-pip -y && pip3 install --user meson
   - export PATH=$PATH:~/.local/bin
   - git clone https://github.com/OpenHMD/OpenHMD.git && git clone https://github.com/OpenHMD/hidapi.git
   - cd hidapi
