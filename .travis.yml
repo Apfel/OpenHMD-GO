@@ -1,6 +1,6 @@
 language: go
 go: stable
-#install:
+install:
   - sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev libtool -y
   - git clone https://github.com/OpenHMD/OpenHMD.git && git clone https://github.com/OpenHMD/hidapi.git
   - cd hidapi
