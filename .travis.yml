@@ -12,9 +12,4 @@ install:
   - make && sudo make install
   - cd ..
   - rm -rf hidapi OpenHMD
-jobs:
-  include:
-    - stage: build
-      script: go build && go test -v
-stages:
-- build
+script: go build && go test -v
