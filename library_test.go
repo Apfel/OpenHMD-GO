@@ -37,6 +37,8 @@ func TestListOpenDevice(t *testing.T) {
 func TestListOpenDeviceSettings(t *testing.T) {
 	if ctx := CreateContext(); ctx == nil {
 		t.Fatal("Got nil Context.")
+	} else if ctx.Probe() == 0 {
+		t.Fatal("Got invalid count (0)")
 	} else if settings := ctx.CreateSettings(); settings == nil {
 		t.Fatal("Got nil Settings.")
 	} else if dev := ctx.ListOpenDeviceSettings(0, settings); dev == nil {
