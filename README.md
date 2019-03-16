@@ -28,7 +28,7 @@ import (
 )
 
 func main() {
-	log.Printf("OpenHMD-GO - Example")
+	log.Printf("OpenHMD-GO - Simple Example")
 	var id int
 
 	if len(os.Args) < 2 || os.Args[1] == "" {
@@ -130,18 +130,31 @@ func main() {
 
 	runtime.LockOSThread()
 
-	context := openhmd.CreateContext()
-	if context == nil {
-		panic("No Context")
+	log.Printf("OpenHMD-GO - Example")
+	var id int
+
+	if len(os.Args) < 2 || os.Args[1] == "" {
+		log.Fatalln("Please provide an device ID.")
+	} else {
+		id, err := strconv.Atoi(os.Args[1])
+		if err != nil {
+			log.Fatalf("Couldn't convert '%s' to an integer.\nError: %s\n", os.Args[1], err.Error())
+		}
+		log.Printf("Using ID %d.", id)
+    }
+    
+    if count := context.Probe(); count == 0 {
+		log.Fatalln("No devices, quitting...")
+	} else {
+		log.Printf("Found device(s). Device count: %d\n", count)
 	}
 
-	if context.Probe() == 0 {
-		panic("No Devices")
-	}
-
-	device := context.ListOpenDevice(0)
-	if device == nil {
-		panic("No Devices")
+	device := context.ListOpenDevice(id)
+	if device == nil || len(context.GetError()) != 0 {
+		log.Fatalf("Device with ID %d couldn't be opened. Error: %s\n", id, context.GetError())
+	} else {
+		log.Printf("Opened device %s, vendor is %s. ID: %s\n", context.ListGetString(id, openhmd.StringValueProduct),
+			context.ListGetString(id, openhmd.StringValueVendor), context.ListGetString(id, openhmd.StringValuePath))
 	}
 
 	code, width := device.GetInt(openhmd.IntValueScreenHorizontalResolution, 1)
@@ -151,7 +164,7 @@ func main() {
 	checkcode(code)
 
 	app, err := application.Create(application.Options{
-		Title:  "OpenHMD",
+		Title:  "OpenHMD - OpenGL example",
 		Width:  int(width[0]),
 		Height: int(height[0]),
 	})
