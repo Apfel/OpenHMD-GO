@@ -144,19 +144,15 @@ func (d *Device) Close() StatusCode {
 }
 
 // GetFloat fetches (a) float value(s).
-func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
+func (d *Device) GetFloat(value FloatValue) (StatusCode, []float32) {
 	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value)))
 
 	if code != StatusCodeOkay {
 		return code, nil
 	}
 
-	if length > 16 {
-		return StatusCodeInvalidParameter, nil
-	}
-
-	array := make([]float32, length)
-	for i := 0; i != int(length); i++ {
+	var array []float32
+	for i := 0; i != 16; i++ {
 		array[i] = float32(C.getfvalue(C.int(i)))
 	}
 
@@ -177,20 +173,16 @@ func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
 }
 
 // GetInt fechtes (a) int value(s).
-func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int32) {
-	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value)))
+func (d *Device) GetInt(value IntValue) (StatusCode, []int32) {
+	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
 
 	if code != StatusCodeOkay {
 		return code, nil
 	}
 
-	if length > 16 {
-		return StatusCodeInvalidParameter, nil
-	}
-
-	array := make([]int32, length)
-	for i := 0; i != int(length); i++ {
-		array[i] = int32(C.getfvalue(C.int(i)))
+	var array []int32
+	for i := 0; i != 16; i++ {
+		array[i] = int32(C.getivalue(C.int(i)))
 	}
 
 	return code, array
