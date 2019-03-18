@@ -3,19 +3,7 @@ go: stable
 install:
   - sudo apt update
   - sudo apt install libhidapi-dev libhidapi-libusb0 libtool -y
-  - git clone https://github.com/OpenHMD/OpenHMD.git
-  - cd hidapi
-  - autoreconf --install --verbose --force
-  - ./configure
-  - make
-  - sudo make install
-  - cd ../OpenHMD
-  - autoreconf --install --verbose --force
-  - ./configure
-  - make
-  - sudo make install
-  - cd ..
-  - rm -rf hidapi OpenHMD
+  - git clone https://github.com/OpenHMD/OpenHMD.git && ./configure && make && sudo make install && cd .. && rm -rf OpenHMD
 script:
   - go build
   # go test -v
