@@ -13,6 +13,7 @@ addons:
       - python3-pip
       - python3-setuptools
     update: true
+before_install: export LD_LIBRARY_PATH=/usr/local/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 install:
   - sudo pip3 install meson
   - git clone https://github.com/OpenHMD/OpenHMD.git
