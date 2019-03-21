@@ -12,7 +12,7 @@ addons:
       - python3-pip
     update: true
 install:
-  - sudo pip3 install meson 
+  - sudo pip3 install -U setuptools meson 
   - git clone https://github.com/OpenHMD/OpenHMD.git
   - cd OpenHMD
   - meson ./build
