@@ -1,9 +1,23 @@
 language: go
 go: stable
+dist: xenial
+addons:
+  apt:
+    packages:
+      - git
+      - libhidapi-dev
+      - libhidapi-libusb0
+      - libtool
+      - python3.5
+      - python3-pip
+    update: true
 install:
-  - sudo apt update
-  - sudo apt install libhidapi-dev libhidapi-libusb0 libtool -y
-  - git clone https://github.com/OpenHMD/OpenHMD.git && cd OpenHMD && autoreconf --verbose --install --force && ./configure && make && sudo make install && cd .. && rm -rf OpenHMD
+  - sudo pip3 install meson 
+  - git clone https://github.com/OpenHMD/OpenHMD.git
+  - cd OpenHMD
+  - meson ./build
+  - ninja -C ./build && sudo ninja -C ./build/ install
+  - cd .. && rm -rf OpenHMD
 script:
   - go build
-  # go test -v
+  - go test -v
