@@ -7,7 +7,6 @@ addons:
       - git
       - libhidapi-dev
       - libhidapi-libusb0
-      - libtool
       - ninja-build
       - python3.5
       - python3-pip
@@ -18,8 +17,10 @@ install:
   - git clone https://github.com/OpenHMD/OpenHMD.git
   - cd OpenHMD
   - meson ./build
-  - ninja -C ./build && sudo ninja -C ./build/ install
-  - cd .. && rm -rf OpenHMD
+  - ninja -C ./build
+  - sudo ninja -C ./build/ install
+  - cd ..
+  - rm -rf OpenHMD
 script:
   - go build
   - go test -v
