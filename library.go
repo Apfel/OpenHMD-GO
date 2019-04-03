@@ -45,7 +45,6 @@ int setint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_seti(
 void setivalue(int index, int value) { setiarray[index] = value; }
 */
 import "C"
-
 import "unsafe"
 
 func init() {
@@ -88,13 +87,13 @@ func (c *Context) Probe() int {
 	return int(C.ohmd_ctx_probe(c.c))
 }
 
-// Update updates the current context
+// Update updates the current context.
 // to fetch the values for the devices handled by a context.
 func (c *Context) Update() {
 	C.ohmd_ctx_update(c.c)
 }
 
-// CreateSettings creates a device settings instance.nt)
+// CreateSettings creates a device settings instance.
 func (c *Context) CreateSettings() *DeviceSettings {
 	settings := C.ohmd_device_settings_create(c.c)
 
@@ -116,7 +115,7 @@ func (s *DeviceSettings) SetInt(key IntSettings, value int) StatusCode {
 	return StatusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &val))
 }
 
-// ListGetString gets device description from enumeration list index.nt)
+// ListGetString gets device description from enumeration list index.
 func (c *Context) ListGetString(deviceIndex int, value StringValue) string {
 	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
 }
@@ -197,8 +196,9 @@ func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int32) {
 }
 
 // SetData sets direct data for a device.
-func (d *Device) SetData(value DataValue, input *interface{}) StatusCode {
-	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(input)))
+// BUG: This function seems to be broken, sending anything will end up with a SIGSEGV.
+func (d *Device) SetData(value DataValue, input interface{}) StatusCode {
+	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))
 }
 
 // GetVersion fetches OpenHMD's version.
