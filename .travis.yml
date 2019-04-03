@@ -21,6 +21,4 @@ install:
   - sudo ninja -C ./build/ install
   - cd ..
   - rm -rf OpenHMD
-script:
-  - go build
-  - go test -v
+script: go test -v
