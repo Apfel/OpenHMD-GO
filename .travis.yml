@@ -1,5 +1,5 @@
 language: go
-go: stable
+go: 1.12.1
 dist: xenial
 addons:
   apt:
@@ -12,8 +12,8 @@ addons:
       - python3-pip
       - python3-setuptools
     update: true
+before_install: sudo pip3 install meson
 install:
-  - sudo pip3 install meson
   - git clone https://github.com/OpenHMD/OpenHMD.git
   - cd OpenHMD
   - meson ./build
