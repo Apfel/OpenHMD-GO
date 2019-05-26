@@ -1,5 +1,5 @@
 language: go
-go: latest
+go: 1.12.5
 dist: xenial
 addons:
   apt:
