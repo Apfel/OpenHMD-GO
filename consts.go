@@ -24,10 +24,8 @@
 
 package openhmd
 
-/*
-#include <openhmd/openhmd.h>
-#cgo LDFLAGS: -L. -lopenhmd
-*/
+//#include <openhmd/openhmd.h>
+//#cgo LDFLAGS: -L. -lopenhmd
 import "C"
 
 // StringSize defines the maximum length of a string, including termination, in OpenHMD.
