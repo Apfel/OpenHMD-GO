@@ -24,59 +24,57 @@
 
 package openhmd
 
-/*
-#include <openhmd/openhmd.h>
-#cgo LDFLAGS: -L. -lopenhmd
-*/
+//#include <openhmd/openhmd.h>
+//#cgo LDFLAGS: -L. -lopenhmd
 import "C"
 
 // ArraySize defines all used Integer and Float array sizes.
 type ArraySize int
 
-// StatusCode - Response status codes.
+// StatusCode specifies Response status codes.
 type StatusCode C.ohmd_status
 
-// StringValue - String values to fetch information.
+// StringValue holds String values to fetch information.
 type StringValue C.ohmd_string_value
 
-// StringDescription - String descriptions for StringValues.
+// StringDescription defines String descriptions for StringValues.
 type StringDescription C.ohmd_string_description
 
-// ControlHint - Control hints.
+// ControlHint defines Control hints.
 type ControlHint C.ohmd_control_hint
 
-// ControlType - Control types.
+// ControlType specifies Control types.
 type ControlType C.ohmd_control_type
 
-// FloatValue - Floating point values.
+// FloatValue defines Floating point values.
 type FloatValue C.ohmd_float_value
 
-// IntValue - Integer values.
+// IntValue carries Integer values.
 type IntValue C.ohmd_int_value
 
-// DataValue - Data values.
+// DataValue contains Data values.
 type DataValue C.ohmd_data_value
 
-// IntSettings - Integer-based settings.
+// IntSettings holds Integer-based settings.
 type IntSettings C.ohmd_int_settings
 
-// DeviceClass - Device classes for OpenHMD devices.
+// DeviceClass defines Device classes for OpenHMD devices.
 type DeviceClass C.ohmd_device_class
 
-// DeviceFlags - Device flags for OpenHMD devices.
+// DeviceFlags specifies Device flags for OpenHMD devices.
 type DeviceFlags C.ohmd_device_flags
 
-// Context holds contextial data.
+// Context defines the current use within an application.
 type Context struct {
 	c *C.struct_ohmd_context
 }
 
-// Device defines a OpenHMD device, like a HMD.
+// Device defines a OpenHMD device, like an HMD or a controller.
 type Device struct {
 	c *C.struct_ohmd_device
 }
 
-// DeviceSettings represents arguments for a Device.
+// DeviceSettings stores all arguments for a Device.
 type DeviceSettings struct {
 	c *C.struct_ohmd_device_settings
 }
