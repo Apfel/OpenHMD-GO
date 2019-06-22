@@ -216,6 +216,6 @@ func RequireVersion(major, minor, patch int) StatusCode {
 }
 
 // Sleep makes OpenHMD sleep for X seconds.
-func Sleep(float64 time) {
+func Sleep(time float64) {
 	C.ohmd_sleep(C.double(time))
 }
