@@ -214,3 +214,8 @@ func GetVersion() (int, int, int) {
 func RequireVersion(major, minor, patch int) StatusCode {
 	return StatusCode(C.ohmd_require_version(C.int(major), C.int(minor), C.int(patch)))
 }
+
+// Sleep makes OpenHMD sleep for X seconds.
+func Sleep(float64 time) {
+	C.ohmd_sleep(C.double(time))
+}
