@@ -26,7 +26,7 @@ package openhmd
 
 /*
 #include <openhmd/openhmd.h>
-#cgo LDFLAGS: -L. -lopenhmd
+#cgo LDFLAGS: -lopenhmd
 
 float getfarray[16];
 int getfloat(ohmd_device* device, ohmd_float_value value) { return ohmd_device_getf(device, value, getfarray); }
@@ -49,11 +49,13 @@ import "unsafe"
 
 func init() {
 	if RequireVersion(0, 3, 0) == StatusCodeUnsupported {
-		panic("OpenHMD-GO: Your installation is too old! OpenHMD-GO requires you to use OpenHMD 0.3.0.")
+		// While this may not be the best practice, it's required nonetheless.
+		panic("OpenHMD-GO: Your installation is too old.\nOpenHMD-GO requires you to use OpenHMD 0.3.0, or higher.")
 	}
 }
 
-// GetString fetches a string from OpenHMD.
+// GetString fetches a string description value from OpenHMD.
+// This has not been implemented yet.
 func GetString(desc StringDescription) (StatusCode, string) {
 	return StatusCodeInvalidOperation, ""
 }
@@ -71,12 +73,12 @@ func CreateContext() *Context {
 }
 
 // Destroy removes the current OpenHMD context.
-// Note: Your context will be nulled and all devices associated with the context are automatically closed.
+// Note: Your context will be removed from memory and all devices associated with the context are automatically closed.
 func (c *Context) Destroy() {
 	C.ohmd_ctx_destroy(c.c)
 }
 
-// GetError gets the last error as a human readable string.
+// GetError fetches the last error as a human-readable string.
 func (c *Context) GetError() string {
 	return C.GoString(C.ohmd_ctx_get_error(c.c))
 }
@@ -87,8 +89,8 @@ func (c *Context) Probe() int {
 	return int(C.ohmd_ctx_probe(c.c))
 }
 
-// Update updates the current context.
-// to fetch the values for the devices handled by a context.
+// Update updates the data of the current context.
+// This should be called periodically, to fetch the new values for the devices handled by a context.
 func (c *Context) Update() {
 	C.ohmd_ctx_update(c.c)
 }
@@ -115,12 +117,12 @@ func (s *DeviceSettings) SetInt(key IntSettings, value int) StatusCode {
 	return StatusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &val))
 }
 
-// ListGetString gets device description from enumeration list index.
+// ListGetString gets a given device description from the enumeration list index.
 func (c *Context) ListGetString(deviceIndex int, value StringValue) string {
 	return C.GoString(C.ohmd_list_gets(c.c, C.int(deviceIndex), C.ohmd_string_value(value)))
 }
 
-// ListGetInt gets integer value from enumeration list index.
+// ListGetInt gets an integer value from the enumeration list index.
 func (c *Context) ListGetInt(deviceIndex int, value IntValue) (StatusCode, int) {
 	var val C.int
 	code := StatusCode(C.ohmd_list_geti(c.c, C.int(deviceIndex), C.ohmd_int_value(value), &val))
@@ -175,7 +177,7 @@ func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
 	return StatusCode(C.setfloat(d.c, C.ohmd_float_value(value)))
 }
 
-// GetInt fechtes (a) int value(s).
+// GetInt fetches (a) int value(s).
 func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int32) {
 	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
 
@@ -201,7 +203,7 @@ func (d *Device) SetData(value DataValue, input interface{}) StatusCode {
 	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))
 }
 
-// GetVersion fetches OpenHMD's version.
+// GetVersion returns OpenHMD's version.
 func GetVersion() (int, int, int) {
 	var major, minor, patch C.int
 	C.ohmd_get_version(&major, &minor, &patch)

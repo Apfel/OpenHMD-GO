@@ -25,43 +25,44 @@
 package openhmd
 
 //#include <openhmd/openhmd.h>
-//#cgo LDFLAGS: -L. -lopenhmd
+//#cgo LDFLAGS: -lopenhmd
 import "C"
 
 // ArraySize defines all used Integer and Float array sizes.
 type ArraySize int
 
-// StatusCode specifies Response status codes.
+// StatusCode specifies the returned code from a function.
 type StatusCode C.ohmd_status
 
-// StringValue holds String values to fetch information.
+// StringValue can be used for identifying the hardware itself.
 type StringValue C.ohmd_string_value
 
-// StringDescription defines String descriptions for StringValues.
+// StringDescription returns information about the used shaders.
 type StringDescription C.ohmd_string_description
 
-// ControlHint defines Control hints.
+// ControlHint defines button presses, trigger pushing and analog stick movement.
 type ControlHint C.ohmd_control_hint
 
-// ControlType specifies Control types.
+// ControlType specifies digital or analog controls.
 type ControlType C.ohmd_control_type
 
-// FloatValue defines Floating point values.
+// FloatValue defines various float32 values, like position, and more data that needs to be accurate.
 type FloatValue C.ohmd_float_value
 
-// IntValue carries Integer values.
+// IntValue carries information that can be single- or double-digit long, and don't need to be accurate, like FloatValue.
+// These can be, for example, the button count, and so on.
 type IntValue C.ohmd_int_value
 
-// DataValue contains Data values.
+// DataValue defines binary data.
 type DataValue C.ohmd_data_value
 
-// IntSettings holds Integer-based settings.
+// IntSettings can be used for integer-based settings for the device.
 type IntSettings C.ohmd_int_settings
 
-// DeviceClass defines Device classes for OpenHMD devices.
+// DeviceClass defines what kind of device is being used.
 type DeviceClass C.ohmd_device_class
 
-// DeviceFlags specifies Device flags for OpenHMD devices.
+// DeviceFlags specifies flags for a given devices.
 type DeviceFlags C.ohmd_device_flags
 
 // Context defines the current use within an application.
@@ -69,12 +70,12 @@ type Context struct {
 	c *C.struct_ohmd_context
 }
 
-// Device defines a OpenHMD device, like an HMD or a controller.
+// Device defines a OpenHMD device, like a Head-Mounted Display or a motion Controller.
 type Device struct {
 	c *C.struct_ohmd_device
 }
 
-// DeviceSettings stores all arguments for a Device.
+// DeviceSettings stores data used for setting up the given device.
 type DeviceSettings struct {
 	c *C.struct_ohmd_device_settings
 }
