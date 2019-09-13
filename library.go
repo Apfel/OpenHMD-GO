@@ -132,7 +132,8 @@ func (s *DeviceSettings) Destroy() {
 
 // SetInt sets the given value for the providen key.
 func (s *DeviceSettings) SetInt(key IntSettings, value int) error {
-	code := statusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &(C.int(value))))
+	value := C.int(value)
+	code := statusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &value))
 
 	return getError(code)
 }
