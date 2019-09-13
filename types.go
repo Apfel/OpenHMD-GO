@@ -28,11 +28,8 @@ package openhmd
 //#cgo LDFLAGS: -lopenhmd
 import "C"
 
-// ArraySize defines all used Integer and Float array sizes.
-type ArraySize int
-
-// StatusCode specifies the returned code from a function.
-type StatusCode C.ohmd_status
+// Used internally to check statuses.
+type statusCode int
 
 // StringValue can be used for identifying the hardware itself.
 type StringValue C.ohmd_string_value
@@ -46,7 +43,7 @@ type ControlHint C.ohmd_control_hint
 // ControlType specifies digital or analog controls.
 type ControlType C.ohmd_control_type
 
-// FloatValue defines various float32 values, like position, and more data that needs to be accurate.
+// FloatValue defines various float32-based values, like position or rotation, and more data that needs to be accurate.
 type FloatValue C.ohmd_float_value
 
 // IntValue carries information that can be single- or double-digit long, and don't need to be accurate, like FloatValue.

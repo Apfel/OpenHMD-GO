@@ -45,19 +45,38 @@ int setint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_seti(
 void setivalue(int index, int value) { setiarray[index] = value; }
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
-func init() {
-	if RequireVersion(0, 3, 0) == StatusCodeUnsupported {
-		// While this may not be the best practice, it's required nonetheless.
-		panic("OpenHMD-GO: Your installation is too old.\nOpenHMD-GO requires you to use OpenHMD 0.3.0, or higher.")
+func getError(code statusCode) error {
+	var err error
+
+	switch code {
+	case statusCodeOkay:
+		err = nil
+		break
+	case statusCodeUnknownError:
+		err = ErrorUnknownError
+		break
+	case statusCodeInvalidParameter:
+		err = ErrorInvalidParameter
+		break
+	case statusCodeUnsupported:
+		err = ErrorUnsupported
+		break
+	case statusCodeInvalidOperation:
+		err = ErrorInvalidOperation
+		break
 	}
+
+	return err
 }
 
 // GetString fetches a string description value from OpenHMD.
 // This has not been implemented yet.
-func GetString(desc StringDescription) (StatusCode, string) {
-	return StatusCodeInvalidOperation, ""
+func GetString(desc StringDescription) (string, error) {
+	return "", ErrorInvalidOperation
 }
 
 // CreateContext makes an OpenHMD context.
@@ -73,7 +92,7 @@ func CreateContext() *Context {
 }
 
 // Destroy removes the current OpenHMD context.
-// Note: Your context will be removed from memory and all devices associated with the context are automatically closed.
+// Note: Your context will be removed from memory and all devices associated with the context will be closed automatically.
 func (c *Context) Destroy() {
 	C.ohmd_ctx_destroy(c.c)
 }
@@ -112,9 +131,10 @@ func (s *DeviceSettings) Destroy() {
 }
 
 // SetInt sets the given value for the providen key.
-func (s *DeviceSettings) SetInt(key IntSettings, value int) StatusCode {
-	val := C.int(value)
-	return StatusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &val))
+func (s *DeviceSettings) SetInt(key IntSettings, value int) error {
+	code := statusCode(C.ohmd_device_settings_seti(s.c, C.ohmd_int_settings(key), &(C.int(value))))
+
+	return getError(code)
 }
 
 // ListGetString gets a given device description from the enumeration list index.
@@ -123,10 +143,10 @@ func (c *Context) ListGetString(deviceIndex int, value StringValue) string {
 }
 
 // ListGetInt gets an integer value from the enumeration list index.
-func (c *Context) ListGetInt(deviceIndex int, value IntValue) (StatusCode, int) {
+func (c *Context) ListGetInt(deviceIndex int, value IntValue) (int, error) {
 	var val C.int
-	code := StatusCode(C.ohmd_list_geti(c.c, C.int(deviceIndex), C.ohmd_int_value(value), &val))
-	return code, int(val)
+	err := getError(statusCode(C.ohmd_list_geti(c.c, C.int(deviceIndex), C.ohmd_int_value(value), &val)))
+	return int(val), err
 }
 
 // ListOpenDevice opens a device.
@@ -140,20 +160,18 @@ func (c *Context) ListOpenDeviceSettings(index int, settings *DeviceSettings) *D
 }
 
 // Close closes the current device.
-func (d *Device) Close() StatusCode {
-	return StatusCode(C.ohmd_close_device(d.c))
+func (d *Device) Close() error {
+	return getError(statusCode(C.ohmd_close_device(d.c)))
 }
 
 // GetFloat fetches (a) float value(s).
-func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) {
-	code := StatusCode(C.getfloat(d.c, C.ohmd_float_value(value)))
-
-	if code != StatusCodeOkay {
-		return code, nil
+func (d *Device) GetFloat(value FloatValue, length int) ([]float32, error) {
+	if length > 16 || length < 1 {
+		return nil, ErrorInvalidParameter
 	}
 
-	if length > 16 || length < 1 {
-		return StatusCodeInvalidParameter, nil
+	if err := getError(statusCode(C.getfloat(d.c, C.ohmd_float_value(value)))); err != nil {
+		return nil, err
 	}
 
 	array := make([]float32, length)
@@ -161,32 +179,30 @@ func (d *Device) GetFloat(value FloatValue, length int) (StatusCode, []float32) 
 		array[i] = float32(C.getfvalue(C.int(i)))
 	}
 
-	return code, array
+	return array, nil
 }
 
 // SetFloat sets (a) float value(s).
-func (d *Device) SetFloat(value FloatValue, input []float32) StatusCode {
+func (d *Device) SetFloat(value FloatValue, input []float32) error {
 	if len(input) > 16 {
-		return StatusCodeInvalidParameter
+		return ErrorInvalidParameter
 	}
 
 	for i, v := range input {
 		C.setfvalue(C.int(i), C.float(v))
 	}
 
-	return StatusCode(C.setfloat(d.c, C.ohmd_float_value(value)))
+	return getError(statusCode(C.setfloat(d.c, C.ohmd_float_value(value))))
 }
 
 // GetInt fetches (a) int value(s).
-func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int32) {
-	code := StatusCode(C.getint(d.c, C.ohmd_int_value(value)))
-
-	if code != StatusCodeOkay {
-		return code, nil
+func (d *Device) GetInt(value IntValue, length int) ([]int32, error) {
+	if length > 16 || length < 1 {
+		return nil, ErrorInvalidParameter
 	}
 
-	if length > 16 || length < 1 {
-		return StatusCodeInvalidParameter, nil
+	if err := getError(statusCode(C.getint(d.c, C.ohmd_int_value(value)))); err != nil {
+		return nil, err
 	}
 
 	array := make([]int32, length)
@@ -194,13 +210,17 @@ func (d *Device) GetInt(value IntValue, length int) (StatusCode, []int32) {
 		array[i] = int32(C.getivalue(C.int(i)))
 	}
 
-	return code, array
+	return array, nil
 }
 
 // SetData sets direct data for a device.
 // BUG: This function seems to be broken, sending anything will end up with a SIGSEGV.
-func (d *Device) SetData(value DataValue, input interface{}) StatusCode {
-	return StatusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))
+func (d *Device) SetData(value DataValue, input interface{}) error {
+	if err := getError(statusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetVersion returns OpenHMD's version.
@@ -212,9 +232,13 @@ func GetVersion() (int, int, int) {
 }
 
 // RequireVersion checks that the library is compatible with the required version.
-// Returns StatusOkay if compatible, else StatusUnsupported.
-func RequireVersion(major, minor, patch int) StatusCode {
-	return StatusCode(C.ohmd_require_version(C.int(major), C.int(minor), C.int(patch)))
+// Returns true if the version is met.
+func RequireVersion(major, minor, patch int) bool {
+	if statusCode(C.ohmd_require_version(C.int(major), C.int(minor), C.int(patch))) == statusCodeUnsupported {
+		return false
+	}
+
+	return true
 }
 
 // Sleep makes OpenHMD sleep for X seconds.
