@@ -37,7 +37,7 @@ const (
 	statusCodeUnknownError     statusCode = C.OHMD_S_UNKNOWN_ERROR
 	statusCodeInvalidParameter statusCode = C.OHMD_S_INVALID_PARAMETER
 	statusCodeUnsupported      statusCode = C.OHMD_S_UNSUPPORTED
-	statusCodeInvalidOperation statusCode = C.OHMD_S_OPERATION
+	statusCodeInvalidOperation statusCode = C.OHMD_S_INVALID_OPERATION
 )
 
 const (
