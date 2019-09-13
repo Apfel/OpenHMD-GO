@@ -128,7 +128,7 @@ const (
 	// FloatValueLeftEyeGlModelViewMatrix defines a "ready to use" OpenGL style 4x4 matrix with a modelview matrix for the left eye of the HMD.
 	// Valid for GetFloat.
 	// Returns 16 values.
-	FloatValueLeftEyeGlModelViewMatrix FloatValue =
+	FloatValueLeftEyeGlModelViewMatrix
 
 	// FloatValueRightEyeGlModelViewMatrix defines a "ready to use" OpenGL style 4x4 matrix with a modelview matrix for the right eye of the HMD.
 	// Valid for GetFloat.
