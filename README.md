@@ -1,19 +1,18 @@
-[![GoDoc](https://godoc.org/github.com/Apfel/OpenHMD-GO?status.svg)](https://godoc.org/github.com/Apfel/OpenHMD-GO)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Apfel/OpenHMD-GO)](https://goreportcard.com/report/github.com/Apfel/OpenHMD-GO)
-[![Build Status](https://travis-ci.org/Apfel/OpenHMD-GO.svg?branch=master)](https://travis-ci.org/Apfel/OpenHMD-GO)
+[![GoDoc](https://godoc.org/github.com/Apfel/openhmd-go?status.svg)](https://godoc.org/github.com/Apfel/openhmd-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Apfel/openhmd-go)](https://goreportcard.com/report/github.com/Apfel/openhmd-go)
+[![Build Status](https://travis-ci.org/Apfel/openhmd-go.svg?branch=master)](https://travis-ci.org/Apfel/openhmd-go)
 
-# OpenHMD-GO
-[OpenHMD](http://www.openhmd.net/) API bindings for [Golang](https://golang.org/).
+# openhmd-go
+[OpenHMD](http://www.openhmd.net/) API bindings for [Go](https://golang.org/).
 
 ```sh
-go get github.com/Apfel/OpenHMD-GO
+go get github.com/Apfel/openhmd-go
 ```
 
-This module requires OpenHMD. [Click here for help](http://www.openhmd.net/index.php/download/).
+This module requires OpenHMD. Click [here](http://www.openhmd.net/index.php/download/) for instructions.
 
-## Examples
-### Simple Example
-This is OpenHMD's simple example, ported to Golang using OpenHMD-GO.
+## Example
+This is OpenHMD's simple example, ported to Go using openhmd-go.
 
 ```go
 package main
@@ -24,11 +23,11 @@ import (
 	"strconv"
 	"time"
 
-	openhmd "github.com/Apfel/OpenHMD-GO"
+	openhmd "github.com/Apfel/openhmd-go"
 )
 
 func main() {
-	log.Printf("OpenHMD-GO - Simple Example")
+	log.Printf("openhmd-go - Simple Example")
 	var id int
 
 	if len(os.Args) < 2 || os.Args[1] == "" {
