@@ -70,4 +70,13 @@ func TestListOpenDeviceSettings(t *testing.T) {
 	}
 }
 
+func TestGetString(t *testing.T) {
+	text, err := GetString(StringDescriptionGlslDisortionFragSRC)
+	if err != nil {
+		t.Fatalf("Got error: %s", err.Error())
+	}
+
+	t.Logf("Got text successfully: %s", text)
+}
+
 // TODO: Implement GetFloat/Int and SetFloat/Int as well as SetData

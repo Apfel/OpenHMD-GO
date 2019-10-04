@@ -45,9 +45,7 @@ int setint(ohmd_device* device, ohmd_int_value value) { return ohmd_device_seti(
 void setivalue(int index, int value) { setiarray[index] = value; }
 */
 import "C"
-import (
-	"unsafe"
-)
+import "unsafe"
 
 func getError(code statusCode) error {
 	var err error
@@ -74,9 +72,10 @@ func getError(code statusCode) error {
 }
 
 // GetString fetches a string description value from OpenHMD.
-// This has not been implemented yet.
 func GetString(desc StringDescription) (string, error) {
-	return "", ErrorInvalidOperation
+	var out *C.char
+	code := statusCode(C.ohmd_gets(C.ohmd_string_description(desc), &out))
+	return C.GoString(out), getError(code)
 }
 
 // CreateContext makes an OpenHMD context.
@@ -214,8 +213,7 @@ func (d *Device) GetInt(value IntValue, length int) ([]int32, error) {
 	return array, nil
 }
 
-// SetData sets direct data for a device.
-// BUG: This function seems to be broken, sending anything will end up with a SIGSEGV.
+// SetData sends data directly a device.
 func (d *Device) SetData(value DataValue, input interface{}) error {
 	if err := getError(statusCode(C.ohmd_device_set_data(d.c, C.ohmd_data_value(value), unsafe.Pointer(&input)))); err != nil {
 		return err
