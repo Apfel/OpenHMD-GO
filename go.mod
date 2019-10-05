@@ -1,3 +1,3 @@
-module github.com/Apfel/OpenHMD-GO
+module github.com/Apfel/openhmd-go
 
 go 1.11
